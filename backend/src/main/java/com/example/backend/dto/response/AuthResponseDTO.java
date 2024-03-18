@@ -9,7 +9,7 @@ public class AuthResponseDTO {
 
     private String token;
     private String email;
-    private String id;
+    private long id;
     private String name;
     private String lastName;
     private String username;
