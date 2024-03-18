@@ -7,8 +7,8 @@ import com.example.backend.entity.UserEntity;
 import com.example.backend.exception.MyException;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.AuthService;
+import com.example.backend.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public AuthResponseDTO register(AuthRegisterRequestDTO request) {
+    public AuthResponseDTO register(AuthRegisterRequestDTO request) throws MyException{
 
         validatePassword(request);
 
