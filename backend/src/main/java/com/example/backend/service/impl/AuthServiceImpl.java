@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -42,6 +44,8 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .lastName(request.getLastName())
+                .isActive(true)
+                .registrationDate(LocalDate.now())
                 .build();
 
         userRepository.save(user);
@@ -53,6 +57,8 @@ public class AuthServiceImpl implements AuthService {
         String lastName = user.getLastName();
         String name = user.getName();
         String userName = user.getUsername();
+        boolean isActive = user.isActive();
+        LocalDate registrationDate = user.getRegistrationDate();
 
         return AuthResponseDTO.builder()
                 .id(id)
@@ -61,6 +67,8 @@ public class AuthServiceImpl implements AuthService {
                 .name(name)
                 .token(jwtToken)
                 .email(email)
+                .isActive(isActive)
+                .registrationDate(registrationDate)
                 .build();
     }
 

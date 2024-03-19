@@ -10,7 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-     @Value("${jwt_secret}")
+     @Value("${JWT_SECRET}")
      private String secretKey;
 
     @Override
@@ -74,6 +73,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean validateToken(String token, UserDetails userDetails) {
-        return false;
+        final String username = getUserName(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

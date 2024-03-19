@@ -18,7 +18,7 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-    
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody AuthRegisterRequestDTO request) throws MyException {
         return ResponseEntity.ok(authService.register(request));
