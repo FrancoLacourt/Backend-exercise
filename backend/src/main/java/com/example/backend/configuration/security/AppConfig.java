@@ -1,9 +1,9 @@
 package com.example.backend.configuration.security;
 
 import com.example.backend.exception.MyException;
+import com.example.backend.exception.ObjectNotFoundException;
 import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +24,7 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> (UserDetails) userRepository.findUserByEmail(username)
-                .orElseThrow(null);
+                .orElseThrow(()-> new ObjectNotFoundException("User does not exist"));
     }
 
     @Bean
