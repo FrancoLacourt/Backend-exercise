@@ -4,6 +4,7 @@ import com.example.backend.dto.request.AuthLoginRequestDTO;
 import com.example.backend.dto.request.AuthRegisterRequestDTO;
 import com.example.backend.dto.response.AuthResponseDTO;
 import com.example.backend.entity.UserEntity;
+import com.example.backend.exception.InvalidPasswordException;
 import com.example.backend.exception.MyException;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.AuthService;
@@ -100,11 +101,11 @@ public class AuthServiceImpl implements AuthService {
     private void validatePassword(AuthRegisterRequestDTO request) throws MyException {
 
         if (!StringUtils.hasText(request.getPassword()) || !StringUtils.hasText(request.getRepeatedPassword())) {
-            throw new MyException("Passwords don't match");
+            throw new InvalidPasswordException("Passwords don't match");
         }
 
         if (!request.getPassword().equals(request.getRepeatedPassword())) {
-            throw new MyException("Passwords don't match");
+            throw new InvalidPasswordException("Passwords don't match");
         }
     }
 }
