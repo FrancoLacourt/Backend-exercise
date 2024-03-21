@@ -15,6 +15,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.verification.NoMoreInteractions;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -265,5 +267,66 @@ public class TagServiceTest {
 
         MyException exception = assertThrows(MyException.class, () -> tagService.validate(tagDTO.getTagName()));
         assertEquals("Tag's name can't be null or empty.", exception.getMessage());
+    }
+
+    @Test
+    void updateTagTest() throws MyException {
+
+        String newTagName = "Fantasy";
+
+        when(tagRepository.findById(id_tag1)).thenReturn(Optional.of(tag1));
+
+        when(tagRepository.save(any(Tag.class))).thenReturn(tag1);
+        when(tagMapper.tagToTagDTO(any())).thenReturn(new TagDTO());
+
+        TagDTO resultTagDTO = tagService.updateTag(id_tag1, newTagName);
+
+        verify(tagRepository).save(tag1);
+
+        assertEquals(tag1.getTagName(), newTagName);
+    }
+
+    @Test
+    void updateTagTest_WhenTagDoesNotExist() throws MyException {
+
+        String newTagName = "Fantasy";
+
+        when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
+
+        TagDTO resultTagDTO = tagService.updateTag(id_tag1, newTagName);
+
+        assertNull(resultTagDTO);
+        verify(tagRepository).findById(id_tag1);
+        verifyNoInteractions(tagMapper);
+        verifyNoMoreInteractions(tagRepository);
+    }
+
+    @Test
+    void deleteTagTest() {
+
+        when(tagRepository.findById(id_tag1)).thenReturn(Optional.ofNullable(tag1));
+
+        when(tagMapper.tagToTagDTO(tag1)).thenReturn(new TagDTO());
+
+        TagDTO deletedTag = tagService.deleteTag(id_tag1);
+
+        verify(tagRepository).delete(tag1);
+
+        assertFalse(tag1.getNotes().contains(note1));
+        assertFalse(note1.getTags().contains(tag1));
+    }
+
+    @Test
+    void deleteTagTest_WhenTagDoesNotExist() {
+
+        when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
+
+        TagDTO deletedTag = tagService.deleteTag(id_tag1);
+
+        verify(tagRepository).findById(id_tag1);
+        verifyNoMoreInteractions(tagRepository);
+        verifyNoInteractions(tagMapper);
+
+        assertNull(deletedTag);
     }
 }
