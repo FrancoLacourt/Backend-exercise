@@ -14,7 +14,7 @@ public class AuthResponseDTO {
     private long id;
     private String name;
     private String lastName;
-    private String username;
+    private String displayName;
     private boolean isActive;
     private LocalDate registrationDate;
 }
