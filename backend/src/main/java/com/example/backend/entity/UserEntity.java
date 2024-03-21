@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -28,7 +30,7 @@ public class UserEntity implements UserDetails{
     private String name;
     private String lastName;
     private String username;
-    private String country;
+    private String displayName;
 
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -65,4 +67,5 @@ public class UserEntity implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
+
 }

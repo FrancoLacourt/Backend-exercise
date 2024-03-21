@@ -124,14 +124,12 @@ public class NoteController {
     }
 
 
-    @PutMapping("/removeTag/{id_note}")
-    public ResponseEntity<NoteDTO> removeTagFromNote(@PathVariable Long id_note, @RequestParam String tagName) throws MyException {
-        NoteDTO noteDTO = noteService.findNoteById(id_note);
+    @PutMapping("/removeTag/{id_note}/{id_tag}")
+    public ResponseEntity<NoteDTO> removeTagFromNote(@PathVariable Long id_note, @PathVariable Long id_tag) throws MyException {
 
-        if (noteDTO != null) {
-            List<TagDTO> tagsDTO = tagService.getOrCreateTags(Collections.singletonList(tagName));
-            Long id_tag = tagsDTO.get(0).getId_tag();
-            NoteDTO updatedNoteDTO = noteService.removeTagFromNote(id_note, id_tag);
+        NoteDTO updatedNoteDTO = noteService.removeTagFromNote(id_note, id_tag);
+
+        if (updatedNoteDTO != null) {
             return ResponseEntity.status(HttpStatus.OK).body(updatedNoteDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

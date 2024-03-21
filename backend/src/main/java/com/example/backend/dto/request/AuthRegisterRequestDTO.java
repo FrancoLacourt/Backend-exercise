@@ -9,7 +9,7 @@ public class AuthRegisterRequestDTO {
 
     private String name;
     private String lastName;
-    private String username;
+    private String displayName;
     private String email;
     private String password;
     private String repeatedPassword;

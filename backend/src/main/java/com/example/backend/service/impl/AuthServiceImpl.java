@@ -39,9 +39,13 @@ public class AuthServiceImpl implements AuthService {
 
         validatePassword(request);
 
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("There is already an account registered with this email.");
+        }
+
         var user = UserEntity.builder()
                 .email(request.getEmail())
-                .username(request.getUsername())
+                .displayName(request.getDisplayName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .lastName(request.getLastName())
@@ -57,14 +61,14 @@ public class AuthServiceImpl implements AuthService {
         String email = user.getEmail();
         String lastName = user.getLastName();
         String name = user.getName();
-        String userName = user.getUsername();
+        String displayName = user.getDisplayName();
         boolean isActive = user.isActive();
         LocalDate registrationDate = user.getRegistrationDate();
 
         return AuthResponseDTO.builder()
                 .id(id)
                 .lastName(lastName)
-                .username(userName)
+                .displayName(displayName)
                 .name(name)
                 .token(jwtToken)
                 .email(email)
@@ -86,12 +90,12 @@ public class AuthServiceImpl implements AuthService {
         String name = user.getName();
         String lastName = user.getLastName();
         String email = user.getEmail();
-        String username = user.getUsername();
+        String displayName = user.getDisplayName();
 
         return AuthResponseDTO.builder()
                 .id(id)
                 .token(jwtToken)
-                .username(username)
+                .displayName(displayName)
                 .name(name)
                 .lastName(lastName)
                 .email(email)
