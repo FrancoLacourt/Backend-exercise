@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.NoteDTO;
 import com.example.backend.dto.TagDTO;
+import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;
 import com.example.backend.service.TagService;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,32 @@ public class TagController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(notesDTO);
+        }
+    }
+
+    @PutMapping("/update/{id_tag}")
+    public ResponseEntity<TagDTO> updateTag(@PathVariable Long id_tag, @RequestParam String newTagName) throws MyException {
+
+        TagDTO tagDTO;
+
+        try {
+            tagDTO = tagService.updateTag(id_tag, newTagName);
+        } catch (MyException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(tagDTO);
+    }
+
+    @DeleteMapping("/delete/{id_tag}")
+    public ResponseEntity<TagDTO> deleteTag(@PathVariable Long id_tag) {
+        TagDTO tagDTO = tagService.findTagById(id_tag);
+
+        if (tagDTO != null) {
+            tagService.deleteTag(id_tag);
+            return ResponseEntity.status(HttpStatus.OK).body(tagDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }

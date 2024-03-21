@@ -97,6 +97,41 @@ public class TagServiceImpl implements TagService {
         return noteMapper.toNoteDTOList(notes);
     }
 
+    @Override
+    public TagDTO updateTag(Long id_tag, String newTagName) throws MyException{
+        validate(newTagName);
+
+        Tag tag = tagRepository.findById(id_tag).orElse(null);
+
+        if (tag != null) {
+            tag.setTagName(newTagName);
+            Tag savedTag = tagRepository.save(tag);
+            return tagMapper.tagToTagDTO(savedTag);
+        } else {
+            System.out.println("It wasn't possible to find a tag with the ID: " + id_tag);
+            return null;
+        }
+    }
+
+    @Override
+    public TagDTO deleteTag(Long id_tag) {
+        Tag tag = tagRepository.findById(id_tag).orElse(null);
+
+        if (tag != null) {
+            for (Note note : tag.getNotes()) {
+                note.getTags().remove(tag);
+            }
+            tag.getNotes().clear();
+
+            tagRepository.delete(tag);
+
+            return tagMapper.tagToTagDTO(tag);
+        } else {
+            System.out.println("It wasn't possible to find a tag with the ID: " + id_tag);
+            return null;
+        }
+    }
+
     public void validate(String tagName) throws MyException {
         if (tagName == null || ExceptionMethods.onlySpaces(tagName)) {
             throw new MyException("Tag's name can't be null or empty.");

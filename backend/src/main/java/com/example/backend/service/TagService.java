@@ -13,4 +13,6 @@ public interface TagService {
     TagDTO findTagById(Long id_tag);
     List<TagDTO> getOrCreateTags(List<String> tagNames) throws MyException;
     List<NoteDTO> getNotes(Long id_tag);
+    TagDTO updateTag(Long id_tag, String newTagName) throws MyException;
+    TagDTO deleteTag(Long id_tag);
 }
