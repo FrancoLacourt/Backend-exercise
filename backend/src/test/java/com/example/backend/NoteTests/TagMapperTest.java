@@ -2,6 +2,8 @@ package com.example.backend.NoteTests;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
+import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.mapper.TagMapper;
@@ -27,10 +29,10 @@ public class TagMapperTest {
     private Note note1;
     private Note note2;
     private List<Note> notes;
-    private NoteRequestDTO noteDTO;
-    private TagRequestDTO tagDTO1;
-    private TagRequestDTO tagDTO2;
-    private List<TagRequestDTO> tagDTOS;
+    private NoteResponseDTO noteResponseDTO;
+    private TagResponseDTO tagResponseDTO1;
+    private TagResponseDTO tagResponseDTO2;
+    private List<TagResponseDTO> tagResponseListDTO;
 
     @BeforeEach
     void setUp() {
@@ -41,10 +43,10 @@ public class TagMapperTest {
         note2 = new Note();
         notes = new ArrayList<>();
         tags = new ArrayList<>();
-        noteDTO = new NoteRequestDTO();
-        tagDTO1 = new TagRequestDTO();
-        tagDTO2 = new TagRequestDTO();
-        tagDTOS = new ArrayList<>();
+        noteResponseDTO = new NoteResponseDTO();
+        tagResponseDTO1 = new TagResponseDTO();
+        tagResponseDTO2 = new TagResponseDTO();
+        tagResponseListDTO = new ArrayList<>();
 
         tag1.setTagName("Music");
         tag1.setId_tag(1L);
@@ -65,66 +67,66 @@ public class TagMapperTest {
         note2.setId_note(2L);
         note2.setEnabled(true);
 
-        noteDTO.setTitle("Valid title");
-        noteDTO.setDescription("Valid description");
-        noteDTO.setId_note(1L);
-        noteDTO.setEnabled(true);
-        noteDTO.setTags(tags);
+        noteResponseDTO.setTitle("Valid title");
+        noteResponseDTO.setDescription("Valid description");
+        noteResponseDTO.setId_note(1L);
+        noteResponseDTO.setEnabled(true);
+        noteResponseDTO.setTags(tags);
 
         notes.add(note1);
         notes.add(note2);
 
         tag1.setNotes(notes);
 
-        tagDTO1.setTagName("Music");
-        tagDTO1.setId_tag(1L);
-        tagDTO1.setNotes(notes);
+        tagResponseDTO1.setTagName("Music");
+        tagResponseDTO1.setId_tag(1L);
+        tagResponseDTO1.setNotes(notes);
 
-        tagDTO2.setTagName("Entertainment");
-        tagDTO2.setId_tag(2L);
-        tagDTO2.setNotes(notes);
+        tagResponseDTO2.setTagName("Entertainment");
+        tagResponseDTO2.setId_tag(2L);
+        tagResponseDTO2.setNotes(notes);
 
-        tagDTOS.add(tagDTO1);
-        tagDTOS.add(tagDTO2);
+        tagResponseListDTO.add(tagResponseDTO1);
+        tagResponseListDTO.add(tagResponseDTO2);
     }
 
     @Test
-    void tagToTagDTOTest() {
+    void tagToTagResponseDTOTest() {
 
-        TagRequestDTO tagDTO = tagMapper.tagToTagDTO(tag1);
+        TagResponseDTO tagResponseDTO = tagMapper.tagToTagResponseDTO(tag1);
 
-        assertEquals(tagDTO.getTagName(), tag1.getTagName());
-        assertEquals(tagDTO.getId_tag(), tag1.getId_tag());
-        assertEquals(tagDTO.getNotes(), tag1.getNotes());
+        assertEquals(tagResponseDTO.getTagName(), tag1.getTagName());
+        assertEquals(tagResponseDTO.getId_tag(), tag1.getId_tag());
+        assertEquals(tagResponseDTO.getNotes(), tag1.getNotes());
     }
 
     @Test
-    void tagDTOtoTagTest() {
+    void tagResponseDTOToTagTest() {
 
-        Tag tag = tagMapper.tagDTOToTag(tagDTO1);
+        Tag tag = tagMapper.tagResponseDTOToTag(tagResponseDTO1);
 
-        assertEquals(tag.getTagName(), tagDTO1.getTagName());
-        assertEquals(tag.getId_tag(), tagDTO1.getId_tag());
-        assertEquals(tag.getNotes(), tagDTO1.getNotes());
+        assertEquals(tag.getTagName(), tagResponseDTO1.getTagName());
+        assertEquals(tag.getId_tag(), tagResponseDTO1.getId_tag());
+        assertEquals(tag.getNotes(), tagResponseDTO1.getNotes());
     }
 
     @Test
-    void toTagDTOListTest() {
+    void toTagResponseListDTO() {
 
-        List<TagRequestDTO> newTagDTOS = tagMapper.toTagDTOList(tags);
+        List<TagResponseDTO> newTagResponseListDTO = tagMapper.toTagResponseListDTO(tags);
 
-        assertEquals(newTagDTOS.size(), tags.size());
-        assertEquals(newTagDTOS.get(0).getId_tag(), tags.get(0).getId_tag());
-        assertEquals(newTagDTOS.get(1).getNotes(), tags.get(1).getNotes());
+        assertEquals(newTagResponseListDTO.size(), tags.size());
+        assertEquals(newTagResponseListDTO.get(0).getId_tag(), tags.get(0).getId_tag());
+        assertEquals(newTagResponseListDTO.get(1).getNotes(), tags.get(1).getNotes());
     }
 
     @Test
-    void toTagListTest() {
+    void tagResponseListDTOToTagList() {
 
-        List<Tag> newTags = tagMapper.toTagList(tagDTOS);
+        List<Tag> newTags = tagMapper.tagResponseListDTOToTagList(tagResponseListDTO);
 
-        assertEquals(newTags.size(), tagDTOS.size());
-        assertEquals(newTags.get(0).getId_tag(), tagDTOS.get(0).getId_tag());
-        assertEquals(newTags.get(1).getNotes(), tagDTOS.get(1).getNotes());
+        assertEquals(newTags.size(), tagResponseListDTO.size());
+        assertEquals(newTags.get(0).getId_tag(), tagResponseListDTO.get(0).getId_tag());
+        assertEquals(newTags.get(1).getNotes(), tagResponseListDTO.get(1).getNotes());
     }
 }

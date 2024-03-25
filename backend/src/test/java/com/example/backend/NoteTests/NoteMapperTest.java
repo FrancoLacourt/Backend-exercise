@@ -2,6 +2,7 @@ package com.example.backend.NoteTests;
 
 
 import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.mapper.NoteMapper;
@@ -27,7 +28,8 @@ public class NoteMapperTest {
     private Note note1;
     private Note note2;
     private List<Note> notes;
-    private NoteRequestDTO noteDTO;
+    private NoteResponseDTO noteResponseDTO;
+    private NoteRequestDTO noteRequestDTO;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +40,8 @@ public class NoteMapperTest {
         note2 = new Note();
         notes = new ArrayList<>();
         tags = new ArrayList<>();
-        noteDTO = new NoteRequestDTO();
+        noteResponseDTO = new NoteResponseDTO();
+        noteRequestDTO = new NoteRequestDTO();
 
         tag1.setTagName("Music");
         tag2.setTagName("Entertainment");
@@ -57,47 +60,58 @@ public class NoteMapperTest {
         note2.setId_note(2L);
         note2.setEnabled(true);
 
-        noteDTO.setTitle("Valid title");
-        noteDTO.setDescription("Valid description");
-        noteDTO.setId_note(1L);
-        noteDTO.setEnabled(true);
-        noteDTO.setTags(tags);
+        noteResponseDTO.setTitle("Valid title");
+        noteResponseDTO.setDescription("Valid description");
+        noteResponseDTO.setId_note(1L);
+        noteResponseDTO.setEnabled(true);
+        noteResponseDTO.setTags(tags);
+
+        noteRequestDTO.setTitle("Valid title");
+        noteRequestDTO.setDescription("Valid description");
 
         notes.add(note1);
         notes.add(note2);
     }
 
     @Test
-    void noteToNoteDTOTest() {
+    void noteToNoteResponseDTOTest() {
 
-        NoteRequestDTO noteDTO1 = noteMapper.noteToNoteDTO(note1);
+        NoteResponseDTO noteResponseDTO1 = noteMapper.noteToNoteResponseDTO(note1);
 
-        assertEquals(note1.getId_note(), noteDTO1.getId_note());
-        assertEquals(note1.getTitle(), noteDTO1.getTitle());
-        assertEquals(note1.getDescription(), noteDTO1.getDescription());
-        assertEquals(note1.isEnabled(), noteDTO1.isEnabled());
-        assertEquals(note1.getTags(), noteDTO1.getTags());
+        assertEquals(note1.getId_note(), noteResponseDTO1.getId_note());
+        assertEquals(note1.getTitle(), noteResponseDTO1.getTitle());
+        assertEquals(note1.getDescription(), noteResponseDTO1.getDescription());
+        assertEquals(note1.isEnabled(), noteResponseDTO1.isEnabled());
+        assertEquals(note1.getTags(), noteResponseDTO1.getTags());
     }
 
     @Test
-    void noteDTOToNoteTest() {
+    void noteResponseDTOToNoteTest() {
 
-        Note note = noteMapper.noteDTOToNote(noteDTO);
+        Note note = noteMapper.noteResponseDTOToNote(noteResponseDTO);
 
-        assertEquals(note.getId_note(), noteDTO.getId_note());
-        assertEquals(note.getTitle(), noteDTO.getTitle());
-        assertEquals(note.getDescription(), noteDTO.getDescription());
-        assertEquals(note.isEnabled(), noteDTO.isEnabled());
-        assertEquals(note.getTags(), noteDTO.getTags());
+        assertEquals(note.getId_note(), noteResponseDTO.getId_note());
+        assertEquals(note.getTitle(), noteResponseDTO.getTitle());
+        assertEquals(note.getDescription(), noteResponseDTO.getDescription());
+        assertEquals(note.isEnabled(), noteResponseDTO.isEnabled());
+        assertEquals(note.getTags(), noteResponseDTO.getTags());
+    }
+    @Test
+    void noteRequestDTOToNoteResponseDTOTest() {
+
+        NoteResponseDTO newNoteResponseDTO = noteMapper.noteRequestDTOToNoteResponseDTO(noteRequestDTO);
+
+        assertEquals(newNoteResponseDTO.getTitle(), noteRequestDTO.getTitle());
+        assertEquals(newNoteResponseDTO.getDescription(), noteRequestDTO.getDescription());
     }
 
     @Test
-    void toNoteDTOList() {
+    void toNoteResponseDTOList() {
 
-        List<NoteRequestDTO> noteDTOS = noteMapper.toNoteDTOList(notes);
+        List<NoteResponseDTO> noteResponseListDTO = noteMapper.toNoteResponseDTOList(notes);
 
-        assertEquals(noteDTOS.size(), notes.size());
-        assertEquals(noteDTOS.get(0).getId_note(), notes.get(0).getId_note());
-        assertEquals(noteDTOS.get(1).getTags(), notes.get(1).getTags());
+        assertEquals(noteResponseListDTO.size(), notes.size());
+        assertEquals(noteResponseListDTO.get(0).getId_note(), notes.get(0).getId_note());
+        assertEquals(noteResponseListDTO.get(1).getTags(), notes.get(1).getTags());
     }
 }

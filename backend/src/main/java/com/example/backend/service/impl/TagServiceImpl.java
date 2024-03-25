@@ -1,7 +1,7 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.dto.request.NoteRequestDTO;
-import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
+import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.ExceptionMethods;
@@ -38,29 +38,29 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public TagRequestDTO createTag(String tagName) throws MyException {
+    public TagResponseDTO createTag(String tagName) throws MyException {
         validate(tagName);
 
         Tag tag = new Tag();
         tag.setTagName(tagName);
         Tag createdTag = tagRepository.save(tag);
 
-        return tagMapper.tagToTagDTO(createdTag);
+        return tagMapper.tagToTagResponseDTO(createdTag);
     }
 
     @Override
-    public List<TagRequestDTO> getAllTags() {
+    public List<TagResponseDTO> getAllTags() {
         List<Tag> tags = tagRepository.findAll();
-        return tagMapper.toTagDTOList(tags);
+        return tagMapper.toTagResponseListDTO(tags);
     }
 
     @Override
-    public TagRequestDTO findTagById(Long id_tag) {
+    public TagResponseDTO findTagById(Long id_tag) {
 
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
         if (tag != null) {
-            return tagMapper.tagToTagDTO(tag);
+            return tagMapper.tagToTagResponseDTO(tag);
         } else {
             System.out.println("It wasn't possible to find a tag with the ID: " + id_tag);
             return null;
@@ -73,32 +73,32 @@ public class TagServiceImpl implements TagService {
     If the category does not exist, it creates it.
      */
     @Override
-    public List<TagRequestDTO> getOrCreateTags(List<String> tagNames) throws MyException {
-        List<TagRequestDTO> resultTags = new ArrayList<>();
+    public List<TagResponseDTO> getOrCreateTags(List<String> tagNames) throws MyException {
+        List<TagResponseDTO> resultTags = new ArrayList<>();
 
         for (String tagName : tagNames) {
             Optional<Tag> existingTag = tagRepository.findTagByTagName(tagName);
 
             if (existingTag.isPresent()) {
-                resultTags.add(tagMapper.tagToTagDTO(existingTag.get()));
+                resultTags.add(tagMapper.tagToTagResponseDTO(existingTag.get()));
             } else {
-                TagRequestDTO createdTagDTO = createTag(tagName);
+                TagResponseDTO createdTagResponseDTO = createTag(tagName);
                 // Guardar la etiqueta antes de agregarla a la lista
 
-                resultTags.add(createdTagDTO);
+                resultTags.add(createdTagResponseDTO);
             }
         }
         return resultTags;
     }
     @Override
-    public List<NoteRequestDTO> getNotes(Long id_tag) {
+    public List<NoteResponseDTO> getNotes(Long id_tag) {
 
         List<Note> notes = tagRepository.findById(id_tag).get().getNotes();
-        return noteMapper.toNoteDTOList(notes);
+        return noteMapper.toNoteResponseDTOList(notes);
     }
 
     @Override
-    public TagRequestDTO updateTag(Long id_tag, String newTagName) throws MyException{
+    public TagResponseDTO updateTag(Long id_tag, String newTagName) throws MyException{
         validate(newTagName);
 
         Tag tag = tagRepository.findById(id_tag).orElse(null);
@@ -106,7 +106,7 @@ public class TagServiceImpl implements TagService {
         if (tag != null) {
             tag.setTagName(newTagName);
             Tag savedTag = tagRepository.save(tag);
-            return tagMapper.tagToTagDTO(savedTag);
+            return tagMapper.tagToTagResponseDTO(savedTag);
         } else {
             System.out.println("It wasn't possible to find a tag with the ID: " + id_tag);
             return null;
@@ -114,7 +114,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagRequestDTO deleteTag(Long id_tag) {
+    public TagResponseDTO deleteTag(Long id_tag) {
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
         if (tag != null) {
@@ -125,7 +125,7 @@ public class TagServiceImpl implements TagService {
 
             tagRepository.delete(tag);
 
-            return tagMapper.tagToTagDTO(tag);
+            return tagMapper.tagToTagResponseDTO(tag);
         } else {
             System.out.println("It wasn't possible to find a tag with the ID: " + id_tag);
             return null;

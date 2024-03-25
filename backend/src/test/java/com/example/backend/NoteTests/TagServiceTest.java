@@ -2,6 +2,8 @@ package com.example.backend.NoteTests;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
+import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;
@@ -54,14 +56,14 @@ public class TagServiceTest {
     private Note note2;
     private Tag tag1;
     private Tag tag2;
-    private TagRequestDTO tagDTO1;
-    private TagRequestDTO tagDTO2;
-    private NoteRequestDTO noteDTO1;
-    private NoteRequestDTO noteDTO2;
+    private TagResponseDTO tagResponseDTO1;
+    private TagResponseDTO tagResponseDTO2;
+    private NoteResponseDTO noteResponseDTO1;
+    private NoteResponseDTO noteResponseDTO2;
     private List<Tag> tags;
     private List<Note> notes;
-    private List<TagRequestDTO> tagsDTO;
-    private List<NoteRequestDTO> noteDTOS;
+    private List<TagResponseDTO> tagResponseListDTO;
+    private List<NoteResponseDTO> noteResponseListDTO;
 
     @BeforeEach
     void setUp() {
@@ -78,17 +80,17 @@ public class TagServiceTest {
         tag1 = new Tag();
         tag2 = new Tag();
 
-        tagDTO1 = new TagRequestDTO();
-        tagDTO2 = new TagRequestDTO();
+        tagResponseDTO1 = new TagResponseDTO();
+        tagResponseDTO2 = new TagResponseDTO();
 
-        noteDTO1 = new NoteRequestDTO();
-        noteDTO2 = new NoteRequestDTO();
+        noteResponseDTO1 = new NoteResponseDTO();
+        noteResponseDTO2 = new NoteResponseDTO();
 
         tags = new ArrayList<>();
         notes = new ArrayList<>();
 
-        tagsDTO = new ArrayList<>();
-        noteDTOS = new ArrayList<>();
+        tagResponseListDTO = new ArrayList<>();
+        noteResponseListDTO = new ArrayList<>();
 
         note1.setId_note(id_note1);
         note1.setTitle("Valid title");
@@ -108,23 +110,23 @@ public class TagServiceTest {
         tag2.setTagName("Entertainment");
         tags.add(tag2);
 
-        noteDTO1.setTitle(note1.getTitle());
-        noteDTO1.setDescription(note1.getDescription());
-        noteDTO1.setId_note(note1.getId_note());
-        noteDTOS.add(noteDTO1);
+        noteResponseDTO1.setTitle(note1.getTitle());
+        noteResponseDTO1.setDescription(note1.getDescription());
+        noteResponseDTO1.setId_note(note1.getId_note());
+        noteResponseListDTO.add(noteResponseDTO1);
 
-        noteDTO2.setTitle(note2.getTitle());
-        noteDTO2.setDescription(note2.getDescription());
-        noteDTO2.setId_note(note2.getId_note());
-        noteDTOS.add(noteDTO2);
+        noteResponseDTO2.setTitle(note2.getTitle());
+        noteResponseDTO2.setDescription(note2.getDescription());
+        noteResponseDTO2.setId_note(note2.getId_note());
+        noteResponseListDTO.add(noteResponseDTO2);
 
-        tagDTO1.setTagName(tag1.getTagName());
-        tagDTO1.setId_tag(id_tag1);
-        tagsDTO.add(tagDTO1);
+        tagResponseDTO1.setTagName(tag1.getTagName());
+        tagResponseDTO1.setId_tag(id_tag1);
+         tagResponseListDTO.add(tagResponseDTO1);
 
-        tagDTO2.setTagName(tag2.getTagName());
-        tagDTO2.setId_tag(id_tag2);
-        tagsDTO.add(tagDTO2);
+        tagResponseDTO2.setTagName(tag2.getTagName());
+        tagResponseDTO2.setId_tag(id_tag2);
+         tagResponseListDTO.add(tagResponseDTO2);
 
 
         tag1.setNotes(notes);
@@ -142,11 +144,11 @@ public class TagServiceTest {
 
         when(tagRepository.save(any(Tag.class))).thenReturn(new Tag());
 
-        when(tagMapper.tagToTagDTO(any(Tag.class))).thenReturn(tagDTO1);
+        when(tagMapper.tagToTagResponseDTO(any(Tag.class))).thenReturn(tagResponseDTO1);
         
-        TagRequestDTO createdTagDTO = tagService.createTag(tag1.getTagName());
+        TagResponseDTO createdTagResponseDTO = tagService.createTag(tag1.getTagName());
 
-        assertNotNull(createdTagDTO);
+        assertNotNull(createdTagResponseDTO);
         
         verify(tagRepository).save(tagCaptor.capture());
         System.out.println(tagCaptor.getValue().getTagName());
@@ -157,22 +159,22 @@ public class TagServiceTest {
     void getAllTagsTest() {
 
         when(tagRepository.findAll()).thenReturn(tags);
-        when(tagMapper.toTagDTOList(tags)).thenReturn(tagsDTO);
+        when(tagMapper.toTagResponseListDTO(tags)).thenReturn( tagResponseListDTO);
 
-        List<TagRequestDTO> collectedTagsDTO = tagService.getAllTags();
+        List<TagResponseDTO> collectedTagResponseListDTO = tagService.getAllTags();
 
-        assertEquals(tagsDTO, collectedTagsDTO);
+        assertEquals(tagResponseListDTO, collectedTagResponseListDTO);
     }
 
     @Test
     void findTagByIdTest() {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.of(tag1));
-        when(tagMapper.tagToTagDTO(tag1)).thenReturn(tagDTO1);
+        when(tagMapper.tagToTagResponseDTO(tag1)).thenReturn(tagResponseDTO1);
 
-        TagRequestDTO collectedTagDTO = tagService.findTagById(id_tag1);
+        TagResponseDTO collectedTagResponseDTO = tagService.findTagById(id_tag1);
 
-        assertEquals(id_tag1, collectedTagDTO.getId_tag());
+        assertEquals(id_tag1, collectedTagResponseDTO.getId_tag());
     }
 
     @Test
@@ -180,12 +182,12 @@ public class TagServiceTest {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
 
-        TagRequestDTO collectedTagDto = tagService.findTagById(id_tag1);
+        TagResponseDTO collectedTagResponseDto = tagService.findTagById(id_tag1);
 
         verify(tagRepository).findById(id_tag1);
         verifyNoInteractions(tagMapper);
 
-        assertNull(collectedTagDto);
+        assertNull(collectedTagResponseDto);
     }
 
     @Test
@@ -195,26 +197,26 @@ public class TagServiceTest {
 
         Tag existingTag = tag1;
 
-        TagRequestDTO existingTagDTO = tagDTO1;
+        TagResponseDTO existingTagResponseDTO = tagResponseDTO1;
 
-        TagRequestDTO newTagDTO = new TagRequestDTO();
-        newTagDTO.setTagName("Entertainment");
+        TagResponseDTO newTagResponseDTO = new TagResponseDTO();
+        newTagResponseDTO.setTagName("Entertainment");
 
         when(tagRepository.findTagByTagName("Music")).thenReturn(Optional.of(tag1));
         when(tagRepository.findTagByTagName("Entertainment")).thenReturn(Optional.empty());
-        when(tagMapper.tagToTagDTO(existingTag)).thenReturn(existingTagDTO);
-        when(tagService.createTag("Entertainment")).thenReturn(newTagDTO);
+        when(tagMapper.tagToTagResponseDTO(existingTag)).thenReturn(existingTagResponseDTO);
+        when(tagService.createTag("Entertainment")).thenReturn(newTagResponseDTO);
 
-        List<TagRequestDTO> resultTagsDTO = tagService.getOrCreateTags(tagNames);
+        List<TagResponseDTO> resultTagResponseListDTO = tagService.getOrCreateTags(tagNames);
 
         verify(tagRepository).findTagByTagName("Music");
         verify(tagRepository).findTagByTagName("Entertainment");
-        verify(tagMapper).tagToTagDTO(existingTag);
+        verify(tagMapper).tagToTagResponseDTO(existingTag);
 //        verify(tagService).createTag("Entertainment");
 
-        assertEquals(resultTagsDTO.size(), 2);
-        assertEquals(existingTagDTO, resultTagsDTO.get(0));
-        assertEquals(newTagDTO, resultTagsDTO.get(1));
+        assertEquals(resultTagResponseListDTO.size(), 2);
+        assertEquals(existingTagResponseDTO, resultTagResponseListDTO.get(0));
+        assertEquals(newTagResponseDTO, resultTagResponseListDTO.get(1));
     }
 
     @Test
@@ -224,7 +226,7 @@ public class TagServiceTest {
 
         when(tagRepository.findTagByTagName(any())).thenReturn(Optional.empty());
 
-        List<TagRequestDTO> resultTagsDTO = tagService.getOrCreateTags(tagNames);
+        List<TagResponseDTO> resultTagResponseListDTO = tagService.getOrCreateTags(tagNames);
 
         assertThrows(MyException.class, () -> tagService.createTag(null));
     }
@@ -233,11 +235,11 @@ public class TagServiceTest {
     void getNotesTest() {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.of(tag1));
-        when(noteMapper.toNoteDTOList(notes)).thenReturn(noteDTOS);
+        when(noteMapper.toNoteResponseDTOList(notes)).thenReturn(noteResponseListDTO);
 
-        List<NoteRequestDTO> collectedNotesDTO = tagService.getNotes(id_tag1);
+        List<NoteResponseDTO> collectedNoteResponseListDTO = tagService.getNotes(id_tag1);
 
-        assertEquals(collectedNotesDTO, noteDTOS);
+        assertEquals(collectedNoteResponseListDTO, noteResponseListDTO);
     }
 
     @Test
@@ -275,9 +277,9 @@ public class TagServiceTest {
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.of(tag1));
 
         when(tagRepository.save(any(Tag.class))).thenReturn(tag1);
-        when(tagMapper.tagToTagDTO(any())).thenReturn(new TagRequestDTO());
+        when(tagMapper.tagToTagResponseDTO(any())).thenReturn(new TagResponseDTO());
 
-        TagRequestDTO resultTagDTO = tagService.updateTag(id_tag1, newTagName);
+        TagResponseDTO resultTagResponseDTO = tagService.updateTag(id_tag1, newTagName);
 
         verify(tagRepository).save(tag1);
 
@@ -291,9 +293,9 @@ public class TagServiceTest {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
 
-        TagRequestDTO resultTagDTO = tagService.updateTag(id_tag1, newTagName);
+        TagResponseDTO resultTagResponseDTO = tagService.updateTag(id_tag1, newTagName);
 
-        assertNull(resultTagDTO);
+        assertNull(resultTagResponseDTO);
         verify(tagRepository).findById(id_tag1);
         verifyNoInteractions(tagMapper);
         verifyNoMoreInteractions(tagRepository);
@@ -304,9 +306,9 @@ public class TagServiceTest {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.ofNullable(tag1));
 
-        when(tagMapper.tagToTagDTO(tag1)).thenReturn(new TagRequestDTO());
+        when(tagMapper.tagToTagResponseDTO(tag1)).thenReturn(new TagResponseDTO());
 
-        TagRequestDTO deletedTag = tagService.deleteTag(id_tag1);
+        TagResponseDTO deletedTagResponseDTO = tagService.deleteTag(id_tag1);
 
         verify(tagRepository).delete(tag1);
 
@@ -319,12 +321,12 @@ public class TagServiceTest {
 
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
 
-        TagRequestDTO deletedTag = tagService.deleteTag(id_tag1);
+        TagResponseDTO deletedTagResponseDTO = tagService.deleteTag(id_tag1);
 
         verify(tagRepository).findById(id_tag1);
         verifyNoMoreInteractions(tagRepository);
         verifyNoInteractions(tagMapper);
 
-        assertNull(deletedTag);
+        assertNull(deletedTagResponseDTO);
     }
 }

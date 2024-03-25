@@ -1,7 +1,8 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.dto.request.NoteRequestDTO;
-import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
+import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.ExceptionMethods;
@@ -45,16 +46,18 @@ public class NoteServiceImpl implements NoteService {
     //Validates input, associates tags, create note and save all to the repository.
     @Override
     @Transactional
-    public NoteRequestDTO createNote(NoteRequestDTO noteDTO) throws MyException {
-        validate(noteDTO);
+    public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO) throws MyException {
+        validate(noteRequestDTO);
 
-        List<TagRequestDTO> tagsDTO = tagService.getOrCreateTags(noteDTO.getTagNames());
-        List<Tag> tags = tagMapper.toTagList(tagsDTO);
+        List<TagResponseDTO> tagResponseListDTO = tagService.getOrCreateTags(noteRequestDTO.getTagNames());
+        List<Tag> tags = tagMapper.tagResponseListDTOToTagList(tagResponseListDTO);
 
-        noteDTO.setEnabled(true);
-        noteDTO.setTags(tags);
+        NoteResponseDTO noteResponseDTO = noteMapper.noteRequestDTOToNoteResponseDTO(noteRequestDTO);
 
-        Note note = noteMapper.noteDTOToNote(noteDTO);
+        noteResponseDTO.setEnabled(true);
+        noteResponseDTO.setTags(tags);
+
+        Note note = noteMapper.noteResponseDTOToNote(noteResponseDTO);
 
         Note createdNote = noteRepository.save(note);
 
@@ -65,45 +68,45 @@ public class NoteServiceImpl implements NoteService {
         tagRepository.saveAll(tags);
 
 
-        return noteMapper.noteToNoteDTO(createdNote);
+        return noteMapper.noteToNoteResponseDTO(createdNote);
     }
 
 
     @Override
-    public List<NoteRequestDTO> getAllNotes() {
+    public List<NoteResponseDTO> getAllNotes() {
 
         List<Note> notes = noteRepository.findAll();
 
-        return noteMapper.toNoteDTOList(notes);
+        return noteMapper.toNoteResponseDTOList(notes);
     }
 
 
     // Retrieve the notes that are enabled.
     @Override
-    public List<NoteRequestDTO> getEnabledNotes() {
-        List<NoteRequestDTO> enabledNotesDTO = getAllNotes();
+    public List<NoteResponseDTO> getEnabledNotes() {
+        List<NoteResponseDTO> enabledNoteResponseDTOList = getAllNotes();
 
-        return enabledNotesDTO.stream().filter(NoteRequestDTO::isEnabled)
+        return enabledNoteResponseDTOList.stream().filter(NoteResponseDTO::isEnabled)
                 .collect(Collectors.toList());
     }
 
     // Retrieve the notes that are disabled.
     @Override
-    public List<NoteRequestDTO> getDisabledNotes() {
-        List<NoteRequestDTO> disabledNotesDTO = getAllNotes();
+    public List<NoteResponseDTO> getDisabledNotes() {
+        List<NoteResponseDTO> disabledNoteResponseDTOList = getAllNotes();
 
-        return disabledNotesDTO.stream()
+        return disabledNoteResponseDTOList.stream()
                 .filter(task -> !task.isEnabled())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public NoteRequestDTO findNoteById(Long id_note) {
+    public NoteResponseDTO findNoteById(Long id_note) {
 
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
-            return noteMapper.noteToNoteDTO(note);
+            return noteMapper.noteToNoteResponseDTO(note);
         } else {
             System.out.println("It wasn't possible to find a note with the ID: " + id_note);
             return null;
@@ -113,23 +116,23 @@ public class NoteServiceImpl implements NoteService {
 
     //Updates title and description of a note.
     @Override
-    public NoteRequestDTO updateNote(Long id_note, NoteRequestDTO updatedNoteDTO) throws MyException {
-        validate(updatedNoteDTO);
+    public NoteResponseDTO updateNote(Long id_note, NoteRequestDTO updatedNoteRequestDTO) throws MyException {
+        validate(updatedNoteRequestDTO);
 
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
-            note.setTitle(updatedNoteDTO.getTitle());
-            note.setDescription(updatedNoteDTO.getDescription());
+            note.setTitle(updatedNoteRequestDTO.getTitle());
+            note.setDescription(updatedNoteRequestDTO.getDescription());
             Note savedNote = noteRepository.save(note);
-            return noteMapper.noteToNoteDTO(savedNote);
+            return noteMapper.noteToNoteResponseDTO(savedNote);
         } else {
             return null;
         }
     }
 
     @Override
-    public NoteRequestDTO addTagToNote(Long id_note, Long id_tag) {
+    public NoteResponseDTO addTagToNote(Long id_note, Long id_tag) {
         Note note = noteRepository.findById(id_note).orElse(null);
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
@@ -141,14 +144,14 @@ public class NoteServiceImpl implements NoteService {
             noteRepository.save(note);
             tagRepository.save(tag);
 
-            return noteMapper.noteToNoteDTO(note);
+            return noteMapper.noteToNoteResponseDTO(note);
         } else {
             return null;
         }
     }
 
     @Override
-    public NoteRequestDTO removeTagFromNote(Long id_note, Long id_tag) {
+    public NoteResponseDTO removeTagFromNote(Long id_note, Long id_tag) {
         Note note = noteRepository.findById(id_note).orElse(null);
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
@@ -159,21 +162,21 @@ public class NoteServiceImpl implements NoteService {
             noteRepository.save(note);
             tagRepository.save(tag);
 
-            return noteMapper.noteToNoteDTO(note);
+            return noteMapper.noteToNoteResponseDTO(note);
         } else {
             return null;
         }
     }
 
     @Override
-    public NoteRequestDTO disableNote(Long id_note) {
+    public NoteResponseDTO disableNote(Long id_note) {
 
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
             note.setEnabled(false);
             Note disabledNote = noteRepository.save(note);
-            return noteMapper.noteToNoteDTO(disabledNote);
+            return noteMapper.noteToNoteResponseDTO(disabledNote);
         } else {
             System.out.println("It wasn't possible to find a note with the ID: " + id_note);
             return null;
@@ -181,13 +184,13 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteRequestDTO enableNote(Long id_note) {
+    public NoteResponseDTO enableNote(Long id_note) {
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
             note.setEnabled(true);
             Note enabledNote = noteRepository.save(note);
-            return noteMapper.noteToNoteDTO(enabledNote);
+            return noteMapper.noteToNoteResponseDTO(enabledNote);
         } else {
             System.out.println("It wasn't possible to find a note with the ID: " + id_note);
             return null;
@@ -197,7 +200,7 @@ public class NoteServiceImpl implements NoteService {
 
     //Deletes a note, removing associations with tags.
     @Override
-    public NoteRequestDTO deleteNote(Long id_note) {
+    public NoteResponseDTO deleteNote(Long id_note) {
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
@@ -208,16 +211,16 @@ public class NoteServiceImpl implements NoteService {
 
             noteRepository.delete(note);
 
-            return noteMapper.noteToNoteDTO(note);
+            return noteMapper.noteToNoteResponseDTO(note);
         } else {
             System.out.println("It wasn't possible to find a note with the ID: " + id_note);
             return null;
         }
     }
 
-    public void validate(NoteRequestDTO noteDTO) throws MyException {
-        if (noteDTO.getTitle() == null || ExceptionMethods.onlySpaces(noteDTO.getTitle())
-                || noteDTO.getDescription() == null || ExceptionMethods.onlySpaces(noteDTO.getDescription())) {
+    public void validate(NoteRequestDTO noteRequestDTO) throws MyException {
+        if (noteRequestDTO.getTitle() == null || ExceptionMethods.onlySpaces(noteRequestDTO.getTitle())
+                || noteRequestDTO.getDescription() == null || ExceptionMethods.onlySpaces(noteRequestDTO.getDescription())) {
             throw new MyException("Note's title or description can't be null or empty.");
         }
     }

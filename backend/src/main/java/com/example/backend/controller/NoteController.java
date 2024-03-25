@@ -2,6 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.response.NoteResponseDTO;
+import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.exception.MyException;
 import com.example.backend.service.NoteService;
 import com.example.backend.service.TagService;
@@ -28,123 +30,120 @@ public class NoteController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<NoteRequestDTO> createNote(@RequestBody NoteRequestDTO noteDTO) throws MyException {
+    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO) throws MyException {
 
-        if (noteDTO.getTitle() == null || noteDTO.getDescription() == null) {
+        if (noteRequestDTO.getTitle() == null || noteRequestDTO.getDescription() == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
 
-            NoteRequestDTO savedNoteDTO = noteService.createNote(noteDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedNoteDTO);
+            NoteResponseDTO savedNoteResponseDTO = noteService.createNote(noteRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedNoteResponseDTO);
         }
     }
 
     @GetMapping("/listOfNotes")
-    public ResponseEntity<List<NoteRequestDTO>> getNotes() {
-        List<NoteRequestDTO> notesDTO = noteService.getEnabledNotes();
+    public ResponseEntity<List<NoteResponseDTO>> getNotes() {
+        List<NoteResponseDTO> noteResponseListDTO = noteService.getEnabledNotes();
 
-        if (notesDTO.isEmpty()) {
+        if (noteResponseListDTO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(notesDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(noteResponseListDTO);
         }
     }
 
     @GetMapping("/listOfDisabledNotes")
-    public ResponseEntity<List<NoteRequestDTO>> getDisabledNotes() {
-        List<NoteRequestDTO> notesDTO = noteService.getDisabledNotes();
+    public ResponseEntity<List<NoteResponseDTO>> getDisabledNotes() {
+        List<NoteResponseDTO> noteResponseListDTO = noteService.getDisabledNotes();
 
-        if (notesDTO.isEmpty()) {
+        if (noteResponseListDTO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(notesDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(noteResponseListDTO);
         }
     }
 
     @GetMapping("/{id_note}")
-    public ResponseEntity<NoteRequestDTO> findNoteById(@PathVariable Long id_note) {
+    public ResponseEntity<NoteResponseDTO> findNoteById(@PathVariable Long id_note) {
 
-        NoteRequestDTO noteDTO = noteService.findNoteById(id_note);
+        NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
-        if (noteDTO != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(noteDTO);
+        if (noteResponseDTO != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @PutMapping("/update/{id_note}")
-    public ResponseEntity<NoteRequestDTO> updateNote(@PathVariable Long id_note, @RequestBody NoteRequestDTO updatedNoteDTO) throws MyException {
+    public ResponseEntity<NoteResponseDTO> updateNote(@PathVariable Long id_note, @RequestBody NoteRequestDTO updatedNoteRequestDTO) throws MyException {
 
-        NoteRequestDTO noteDTO = noteService.updateNote(id_note, updatedNoteDTO);
+        NoteResponseDTO noteResponseDTO = noteService.updateNote(id_note, updatedNoteRequestDTO);
 
-        if (updatedNoteDTO.getTitle() == null || updatedNoteDTO.getDescription() == null) {
+        if (updatedNoteRequestDTO.getTitle() == null || updatedNoteRequestDTO.getDescription() == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(noteDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
     }
 
     @PutMapping("/disable/{id_note}")
-    public ResponseEntity<NoteRequestDTO> disableNote(@PathVariable Long id_note) {
-        NoteRequestDTO noteDTO = noteService.findNoteById(id_note);
+    public ResponseEntity<NoteResponseDTO> disableNote(@PathVariable Long id_note) {
+        NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
-        if (noteDTO != null) {
-            NoteRequestDTO disabledNoteDTO = noteService.disableNote(id_note);
-            return ResponseEntity.status(HttpStatus.OK).body(disabledNoteDTO);
+        if (noteResponseDTO != null) {
+            NoteResponseDTO disabledNoteResponseDTO = noteService.disableNote(id_note);
+            return ResponseEntity.status(HttpStatus.OK).body(disabledNoteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @PutMapping("/enable/{id_note}")
-    public ResponseEntity<NoteRequestDTO> enableNote(@PathVariable Long id_note) {
-        NoteRequestDTO noteDTO = noteService.findNoteById(id_note);
+    public ResponseEntity<NoteResponseDTO> enableNote(@PathVariable Long id_note) {
+        NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
-        if (noteDTO != null) {
-            NoteRequestDTO enabledNoteDTO = noteService.enableNote(id_note);
-            return ResponseEntity.status(HttpStatus.OK).body(enabledNoteDTO);
+        if (noteResponseDTO != null) {
+            NoteResponseDTO enabledNoteResponseDTO = noteService.enableNote(id_note);
+            return ResponseEntity.status(HttpStatus.OK).body(enabledNoteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @PutMapping("/addTag/{id_note}")
-    public ResponseEntity<NoteRequestDTO> addTagToNote(@PathVariable Long id_note, @RequestParam String tagName) throws MyException {
-        NoteRequestDTO noteDTO = noteService.findNoteById(id_note);
+    public ResponseEntity<NoteResponseDTO> addTagToNote(@PathVariable Long id_note, @RequestParam String tagName) throws MyException {
+        NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
-        if (noteDTO != null) {
-            List<TagRequestDTO> tagsDTO = tagService.getOrCreateTags(Collections.singletonList(tagName));
-            Long id_tag = tagsDTO.get(0).getId_tag();
-            NoteRequestDTO updatedNoteDTO = noteService.addTagToNote(id_note, id_tag);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedNoteDTO);
+        if (noteResponseDTO != null) {
+            List<TagResponseDTO> tagResponseListDTO = tagService.getOrCreateTags(Collections.singletonList(tagName));
+            Long id_tag = tagResponseListDTO.get(0).getId_tag();
+            NoteResponseDTO updatedNoteResponseDTO = noteService.addTagToNote(id_note, id_tag);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedNoteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-
 
     @PutMapping("/removeTag/{id_note}/{id_tag}")
-    public ResponseEntity<NoteRequestDTO> removeTagFromNote(@PathVariable Long id_note, @PathVariable Long id_tag) throws MyException {
+    public ResponseEntity<NoteResponseDTO> removeTagFromNote(@PathVariable Long id_note, @PathVariable Long id_tag) {
 
-        NoteRequestDTO updatedNoteDTO = noteService.removeTagFromNote(id_note, id_tag);
+        NoteResponseDTO updatedNoteResponseDTO = noteService.removeTagFromNote(id_note, id_tag);
 
-        if (updatedNoteDTO != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(updatedNoteDTO);
+        if (updatedNoteResponseDTO != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedNoteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-
-
     @DeleteMapping("/delete/{id_note}")
-    public ResponseEntity<NoteRequestDTO> deleteNote(@PathVariable Long id_note) {
-        NoteRequestDTO noteDTO = noteService.findNoteById(id_note);
+    public ResponseEntity<NoteResponseDTO> deleteNote(@PathVariable Long id_note) {
+        NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
-        if (noteDTO != null) {
+        if (noteResponseDTO != null) {
             noteService.deleteNote(id_note);
-            return ResponseEntity.status(HttpStatus.OK).body(noteDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
