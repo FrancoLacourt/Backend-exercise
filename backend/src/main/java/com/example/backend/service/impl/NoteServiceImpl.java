@@ -1,7 +1,7 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.dto.request.NoteDTO;
-import com.example.backend.dto.request.TagDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.ExceptionMethods;
@@ -45,10 +45,10 @@ public class NoteServiceImpl implements NoteService {
     //Validates input, associates tags, create note and save all to the repository.
     @Override
     @Transactional
-    public NoteDTO createNote(NoteDTO noteDTO) throws MyException {
+    public NoteRequestDTO createNote(NoteRequestDTO noteDTO) throws MyException {
         validate(noteDTO);
 
-        List<TagDTO> tagsDTO = tagService.getOrCreateTags(noteDTO.getTagNames());
+        List<TagRequestDTO> tagsDTO = tagService.getOrCreateTags(noteDTO.getTagNames());
         List<Tag> tags = tagMapper.toTagList(tagsDTO);
 
         noteDTO.setEnabled(true);
@@ -70,7 +70,7 @@ public class NoteServiceImpl implements NoteService {
 
 
     @Override
-    public List<NoteDTO> getAllNotes() {
+    public List<NoteRequestDTO> getAllNotes() {
 
         List<Note> notes = noteRepository.findAll();
 
@@ -80,17 +80,17 @@ public class NoteServiceImpl implements NoteService {
 
     // Retrieve the notes that are enabled.
     @Override
-    public List<NoteDTO> getEnabledNotes() {
-        List<NoteDTO> enabledNotesDTO = getAllNotes();
+    public List<NoteRequestDTO> getEnabledNotes() {
+        List<NoteRequestDTO> enabledNotesDTO = getAllNotes();
 
-        return enabledNotesDTO.stream().filter(NoteDTO::isEnabled)
+        return enabledNotesDTO.stream().filter(NoteRequestDTO::isEnabled)
                 .collect(Collectors.toList());
     }
 
     // Retrieve the notes that are disabled.
     @Override
-    public List<NoteDTO> getDisabledNotes() {
-        List<NoteDTO> disabledNotesDTO = getAllNotes();
+    public List<NoteRequestDTO> getDisabledNotes() {
+        List<NoteRequestDTO> disabledNotesDTO = getAllNotes();
 
         return disabledNotesDTO.stream()
                 .filter(task -> !task.isEnabled())
@@ -98,7 +98,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteDTO findNoteById(Long id_note) {
+    public NoteRequestDTO findNoteById(Long id_note) {
 
         Note note = noteRepository.findById(id_note).orElse(null);
 
@@ -113,7 +113,7 @@ public class NoteServiceImpl implements NoteService {
 
     //Updates title and description of a note.
     @Override
-    public NoteDTO updateNote(Long id_note, NoteDTO updatedNoteDTO) throws MyException {
+    public NoteRequestDTO updateNote(Long id_note, NoteRequestDTO updatedNoteDTO) throws MyException {
         validate(updatedNoteDTO);
 
         Note note = noteRepository.findById(id_note).orElse(null);
@@ -129,7 +129,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteDTO addTagToNote(Long id_note, Long id_tag) {
+    public NoteRequestDTO addTagToNote(Long id_note, Long id_tag) {
         Note note = noteRepository.findById(id_note).orElse(null);
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
@@ -148,7 +148,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteDTO removeTagFromNote(Long id_note, Long id_tag) {
+    public NoteRequestDTO removeTagFromNote(Long id_note, Long id_tag) {
         Note note = noteRepository.findById(id_note).orElse(null);
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
@@ -166,7 +166,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteDTO disableNote(Long id_note) {
+    public NoteRequestDTO disableNote(Long id_note) {
 
         Note note = noteRepository.findById(id_note).orElse(null);
 
@@ -181,7 +181,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteDTO enableNote(Long id_note) {
+    public NoteRequestDTO enableNote(Long id_note) {
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
@@ -197,7 +197,7 @@ public class NoteServiceImpl implements NoteService {
 
     //Deletes a note, removing associations with tags.
     @Override
-    public NoteDTO deleteNote(Long id_note) {
+    public NoteRequestDTO deleteNote(Long id_note) {
         Note note = noteRepository.findById(id_note).orElse(null);
 
         if (note != null) {
@@ -215,7 +215,7 @@ public class NoteServiceImpl implements NoteService {
         }
     }
 
-    public void validate(NoteDTO noteDTO) throws MyException {
+    public void validate(NoteRequestDTO noteDTO) throws MyException {
         if (noteDTO.getTitle() == null || ExceptionMethods.onlySpaces(noteDTO.getTitle())
                 || noteDTO.getDescription() == null || ExceptionMethods.onlySpaces(noteDTO.getDescription())) {
             throw new MyException("Note's title or description can't be null or empty.");

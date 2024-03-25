@@ -1,7 +1,7 @@
 package com.example.backend.NoteTests;
 
 
-import com.example.backend.dto.request.NoteDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.mapper.NoteMapper;
@@ -27,7 +27,7 @@ public class NoteMapperTest {
     private Note note1;
     private Note note2;
     private List<Note> notes;
-    private NoteDTO noteDTO;
+    private NoteRequestDTO noteDTO;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +38,7 @@ public class NoteMapperTest {
         note2 = new Note();
         notes = new ArrayList<>();
         tags = new ArrayList<>();
-        noteDTO = new NoteDTO();
+        noteDTO = new NoteRequestDTO();
 
         tag1.setTagName("Music");
         tag2.setTagName("Entertainment");
@@ -70,7 +70,7 @@ public class NoteMapperTest {
     @Test
     void noteToNoteDTOTest() {
 
-        NoteDTO noteDTO1 = noteMapper.noteToNoteDTO(note1);
+        NoteRequestDTO noteDTO1 = noteMapper.noteToNoteDTO(note1);
 
         assertEquals(note1.getId_note(), noteDTO1.getId_note());
         assertEquals(note1.getTitle(), noteDTO1.getTitle());
@@ -94,7 +94,7 @@ public class NoteMapperTest {
     @Test
     void toNoteDTOList() {
 
-        List<NoteDTO> noteDTOS = noteMapper.toNoteDTOList(notes);
+        List<NoteRequestDTO> noteDTOS = noteMapper.toNoteDTOList(notes);
 
         assertEquals(noteDTOS.size(), notes.size());
         assertEquals(noteDTOS.get(0).getId_note(), notes.get(0).getId_note());

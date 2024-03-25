@@ -1,7 +1,7 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.dto.request.NoteDTO;
-import com.example.backend.dto.request.TagDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.ExceptionMethods;
@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public TagDTO createTag(String tagName) throws MyException {
+    public TagRequestDTO createTag(String tagName) throws MyException {
         validate(tagName);
 
         Tag tag = new Tag();
@@ -49,13 +49,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> getAllTags() {
+    public List<TagRequestDTO> getAllTags() {
         List<Tag> tags = tagRepository.findAll();
         return tagMapper.toTagDTOList(tags);
     }
 
     @Override
-    public TagDTO findTagById(Long id_tag) {
+    public TagRequestDTO findTagById(Long id_tag) {
 
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
@@ -73,8 +73,8 @@ public class TagServiceImpl implements TagService {
     If the category does not exist, it creates it.
      */
     @Override
-    public List<TagDTO> getOrCreateTags(List<String> tagNames) throws MyException {
-        List<TagDTO> resultTags = new ArrayList<>();
+    public List<TagRequestDTO> getOrCreateTags(List<String> tagNames) throws MyException {
+        List<TagRequestDTO> resultTags = new ArrayList<>();
 
         for (String tagName : tagNames) {
             Optional<Tag> existingTag = tagRepository.findTagByTagName(tagName);
@@ -82,7 +82,7 @@ public class TagServiceImpl implements TagService {
             if (existingTag.isPresent()) {
                 resultTags.add(tagMapper.tagToTagDTO(existingTag.get()));
             } else {
-                TagDTO createdTagDTO = createTag(tagName);
+                TagRequestDTO createdTagDTO = createTag(tagName);
                 // Guardar la etiqueta antes de agregarla a la lista
 
                 resultTags.add(createdTagDTO);
@@ -91,14 +91,14 @@ public class TagServiceImpl implements TagService {
         return resultTags;
     }
     @Override
-    public List<NoteDTO> getNotes(Long id_tag) {
+    public List<NoteRequestDTO> getNotes(Long id_tag) {
 
         List<Note> notes = tagRepository.findById(id_tag).get().getNotes();
         return noteMapper.toNoteDTOList(notes);
     }
 
     @Override
-    public TagDTO updateTag(Long id_tag, String newTagName) throws MyException{
+    public TagRequestDTO updateTag(Long id_tag, String newTagName) throws MyException{
         validate(newTagName);
 
         Tag tag = tagRepository.findById(id_tag).orElse(null);
@@ -114,7 +114,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDTO deleteTag(Long id_tag) {
+    public TagRequestDTO deleteTag(Long id_tag) {
         Tag tag = tagRepository.findById(id_tag).orElse(null);
 
         if (tag != null) {

@@ -1,7 +1,7 @@
 package com.example.backend.NoteTests;
 
-import com.example.backend.dto.request.NoteDTO;
-import com.example.backend.dto.request.TagDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.mapper.TagMapper;
@@ -27,10 +27,10 @@ public class TagMapperTest {
     private Note note1;
     private Note note2;
     private List<Note> notes;
-    private NoteDTO noteDTO;
-    private TagDTO tagDTO1;
-    private TagDTO tagDTO2;
-    private List<TagDTO> tagDTOS;
+    private NoteRequestDTO noteDTO;
+    private TagRequestDTO tagDTO1;
+    private TagRequestDTO tagDTO2;
+    private List<TagRequestDTO> tagDTOS;
 
     @BeforeEach
     void setUp() {
@@ -41,9 +41,9 @@ public class TagMapperTest {
         note2 = new Note();
         notes = new ArrayList<>();
         tags = new ArrayList<>();
-        noteDTO = new NoteDTO();
-        tagDTO1 = new TagDTO();
-        tagDTO2 = new TagDTO();
+        noteDTO = new NoteRequestDTO();
+        tagDTO1 = new TagRequestDTO();
+        tagDTO2 = new TagRequestDTO();
         tagDTOS = new ArrayList<>();
 
         tag1.setTagName("Music");
@@ -91,7 +91,7 @@ public class TagMapperTest {
     @Test
     void tagToTagDTOTest() {
 
-        TagDTO tagDTO = tagMapper.tagToTagDTO(tag1);
+        TagRequestDTO tagDTO = tagMapper.tagToTagDTO(tag1);
 
         assertEquals(tagDTO.getTagName(), tag1.getTagName());
         assertEquals(tagDTO.getId_tag(), tag1.getId_tag());
@@ -111,7 +111,7 @@ public class TagMapperTest {
     @Test
     void toTagDTOListTest() {
 
-        List<TagDTO> newTagDTOS = tagMapper.toTagDTOList(tags);
+        List<TagRequestDTO> newTagDTOS = tagMapper.toTagDTOList(tags);
 
         assertEquals(newTagDTOS.size(), tags.size());
         assertEquals(newTagDTOS.get(0).getId_tag(), tags.get(0).getId_tag());

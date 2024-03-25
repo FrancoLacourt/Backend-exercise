@@ -1,7 +1,7 @@
 package com.example.backend.NoteTests;
 
-import com.example.backend.dto.request.NoteDTO;
-import com.example.backend.dto.request.TagDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;
@@ -54,15 +54,15 @@ public class NoteServiceTest {
     private Note note2;
     private Tag tag1;
     private Tag tag2;
-    private TagDTO tagDTO1;
-    private TagDTO tagDTO2;
-    private NoteDTO noteDTO1;
-    private NoteDTO noteDTO2;
-    private NoteDTO inputNoteDTO;
+    private TagRequestDTO tagDTO1;
+    private TagRequestDTO tagDTO2;
+    private NoteRequestDTO noteDTO1;
+    private NoteRequestDTO noteDTO2;
+    private NoteRequestDTO inputNoteDTO;
     private List<Tag> tags;
     private List<Note> notes;
-    private List<TagDTO> tagsDTO;
-    private List<NoteDTO> noteDTOS;
+    private List<TagRequestDTO> tagsDTO;
+    private List<NoteRequestDTO> noteDTOS;
 
     @BeforeEach
     void setUp() {
@@ -79,13 +79,13 @@ public class NoteServiceTest {
         tag1 = new Tag();
         tag2 = new Tag();
 
-        tagDTO1 = new TagDTO();
-        tagDTO2 = new TagDTO();
+        tagDTO1 = new TagRequestDTO();
+        tagDTO2 = new TagRequestDTO();
 
-        noteDTO1 = new NoteDTO();
-        noteDTO2 = new NoteDTO();
+        noteDTO1 = new NoteRequestDTO();
+        noteDTO2 = new NoteRequestDTO();
 
-        inputNoteDTO = new NoteDTO();
+        inputNoteDTO = new NoteRequestDTO();
 
         tags = new ArrayList<>();
         notes = new ArrayList<>();
@@ -152,10 +152,10 @@ public class NoteServiceTest {
 
         when(noteMapper.noteDTOToNote(inputNoteDTO)).thenReturn(note1);
         when(noteRepository.save(note1)).thenReturn(note1);
-        when(noteMapper.noteToNoteDTO(note1)).thenReturn(new NoteDTO());
+        when(noteMapper.noteToNoteDTO(note1)).thenReturn(new NoteRequestDTO());
 
         // Llamada al método a probar
-            NoteDTO resultNoteDTO = noteService.createNote(inputNoteDTO);
+            NoteRequestDTO resultNoteDTO = noteService.createNote(inputNoteDTO);
 
         verify(tagRepository).saveAll(tags);
 
@@ -185,7 +185,7 @@ public class NoteServiceTest {
         when(noteRepository.findAll()).thenReturn(notes);
         when(noteMapper.toNoteDTOList(notes)).thenReturn(noteDTOS);
 
-        List<NoteDTO> collectedNotesDTO = noteService.getAllNotes();
+        List<NoteRequestDTO> collectedNotesDTO = noteService.getAllNotes();
 
         assertEquals(noteDTOS, collectedNotesDTO);
     }
@@ -198,7 +198,7 @@ public class NoteServiceTest {
 
         when(noteService.getAllNotes()).thenReturn(noteDTOS);
 
-        List<NoteDTO> enabledNotesDTO = noteService.getEnabledNotes();
+        List<NoteRequestDTO> enabledNotesDTO = noteService.getEnabledNotes();
 
 //        verify(noteService.getAllNotes());
 
@@ -214,7 +214,7 @@ public class NoteServiceTest {
 
         when(noteService.getAllNotes()).thenReturn(noteDTOS);
 
-        List<NoteDTO> disabledNotesDTO = noteService.getDisabledNotes();
+        List<NoteRequestDTO> disabledNotesDTO = noteService.getDisabledNotes();
 
         assertEquals(1, disabledNotesDTO.size());
     }
@@ -225,7 +225,7 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.of(note1));
         when(noteMapper.noteToNoteDTO(note1)).thenReturn(noteDTO1);
 
-        NoteDTO collectedNoteDTO = noteService.findNoteById(id_note1);
+        NoteRequestDTO collectedNoteDTO = noteService.findNoteById(id_note1);
 
         assertEquals(id_note1, collectedNoteDTO.getId_note());
     }
@@ -234,7 +234,7 @@ public class NoteServiceTest {
     void findNoteByIdTest_WhenNoteDoesNotExist() {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
-        NoteDTO collectedNoteDTO = noteService.findNoteById(id_note1);
+        NoteRequestDTO collectedNoteDTO = noteService.findNoteById(id_note1);
 
         assertNull(collectedNoteDTO);
         verify(noteRepository).findById(id_note1);
@@ -245,7 +245,7 @@ public class NoteServiceTest {
     @Test
     void updateNoteTest() throws MyException {
 
-        NoteDTO updatedNoteDTO = new NoteDTO();
+        NoteRequestDTO updatedNoteDTO = new NoteRequestDTO();
 
         updatedNoteDTO.setTitle("Updated title");
         updatedNoteDTO.setDescription("Updated description");
@@ -254,9 +254,9 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.of(note1));
 
         when(noteRepository.save(any(Note.class))).thenReturn(note1);
-        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteDTO());
+        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteRequestDTO());
 
-        NoteDTO resultNoteDTO = noteService.updateNote(id_note1, updatedNoteDTO);
+        NoteRequestDTO resultNoteDTO = noteService.updateNote(id_note1, updatedNoteDTO);
 
         verify(noteRepository).save(note1);
 
@@ -267,7 +267,7 @@ public class NoteServiceTest {
     @Test
     void updateNoteTest_WhenNoteDoesNotExist() throws MyException {
 
-        NoteDTO updatedNoteDTO = new NoteDTO();
+        NoteRequestDTO updatedNoteDTO = new NoteRequestDTO();
 
         updatedNoteDTO.setTitle("Updated title");
         updatedNoteDTO.setDescription("Updated description");
@@ -275,7 +275,7 @@ public class NoteServiceTest {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
 
-        NoteDTO resultNoteDTO = noteService.updateNote(id_note1, updatedNoteDTO);
+        NoteRequestDTO resultNoteDTO = noteService.updateNote(id_note1, updatedNoteDTO);
 
         assertNull(resultNoteDTO);
         verify(noteRepository).findById(id_note1);
@@ -301,10 +301,10 @@ public class NoteServiceTest {
         // Configuración de los mocks
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(newNote));
         when(tagRepository.findById(id_tag1)).thenReturn(java.util.Optional.of(newTag));
-        when(noteMapper.noteToNoteDTO(newNote)).thenReturn(new NoteDTO()); // Mock del mapper
+        when(noteMapper.noteToNoteDTO(newNote)).thenReturn(new NoteRequestDTO()); // Mock del mapper
 
         // Llamada al método bajo prueba
-        NoteDTO result = noteService.addTagToNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.addTagToNote(id_note1, id_tag1);
 
         // Verificación
         assertNotNull(result); // Verifica que el resultado no sea nulo
@@ -326,7 +326,7 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.ofNullable(tag1));
 
-        NoteDTO result = noteService.addTagToNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.addTagToNote(id_note1, id_tag1);
 
         repeatedVerifications(result);
     }
@@ -337,7 +337,7 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.ofNullable(note1));
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
 
-        NoteDTO result = noteService.addTagToNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.addTagToNote(id_note1, id_tag1);
 
         repeatedVerifications(result);
     }
@@ -367,10 +367,10 @@ public class NoteServiceTest {
         // Configuración de los mocks
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(newNote));
         when(tagRepository.findById(id_tag1)).thenReturn(java.util.Optional.of(newTag));
-        when(noteMapper.noteToNoteDTO(newNote)).thenReturn(new NoteDTO()); // Mock del mapper
+        when(noteMapper.noteToNoteDTO(newNote)).thenReturn(new NoteRequestDTO()); // Mock del mapper
 
         // Llamada al método bajo prueba
-        NoteDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
 
         // Verificación
         assertNotNull(result); // Verifica que el resultado no sea nulo
@@ -392,7 +392,7 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.of(tag1));
 
-        NoteDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
 
         repeatedVerifications(result);
     }
@@ -403,7 +403,7 @@ public class NoteServiceTest {
         when(noteRepository.findById(id_note1)).thenReturn(Optional.of(note1));
         when(tagRepository.findById(id_tag1)).thenReturn(Optional.empty());
 
-        NoteDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
+        NoteRequestDTO result = noteService.removeTagFromNote(id_note1, id_tag1);
 
         repeatedVerifications(result);
     }
@@ -414,9 +414,9 @@ public class NoteServiceTest {
         note1.setEnabled(true);
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
-        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteDTO());
+        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteRequestDTO());
 
-        NoteDTO disabledNote = noteService.disableNote(id_note1);
+        NoteRequestDTO disabledNote = noteService.disableNote(id_note1);
 
         verify(noteRepository).save(note1);
 
@@ -428,7 +428,7 @@ public class NoteServiceTest {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
 
-        NoteDTO disabledNote = noteService.disableNote(id_note1);
+        NoteRequestDTO disabledNote = noteService.disableNote(id_note1);
 
         verify(noteRepository).findById(id_note1);
         verifyNoMoreInteractions(noteRepository);
@@ -443,9 +443,9 @@ public class NoteServiceTest {
         note1.setEnabled(true);
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
-        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteDTO());
+        when(noteMapper.noteToNoteDTO(any())).thenReturn(new NoteRequestDTO());
 
-        NoteDTO enabledNote = noteService.enableNote(id_note1);
+        NoteRequestDTO enabledNote = noteService.enableNote(id_note1);
 
         verify(noteRepository).save(note1);
 
@@ -457,7 +457,7 @@ public class NoteServiceTest {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
 
-        NoteDTO disabledNote = noteService.enableNote(id_note1);
+        NoteRequestDTO disabledNote = noteService.enableNote(id_note1);
 
         verify(noteRepository).findById(id_note1);
         verifyNoMoreInteractions(noteRepository);
@@ -471,9 +471,9 @@ public class NoteServiceTest {
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
 
-        when(noteMapper.noteToNoteDTO(note1)).thenReturn(new NoteDTO());
+        when(noteMapper.noteToNoteDTO(note1)).thenReturn(new NoteRequestDTO());
 
-        NoteDTO deletedNote = noteService.deleteNote(id_note1);
+        NoteRequestDTO deletedNote = noteService.deleteNote(id_note1);
 
         verify(noteRepository).delete(note1);
 
@@ -486,7 +486,7 @@ public class NoteServiceTest {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
 
-        NoteDTO deletedNote = noteService.deleteNote(id_note1);
+        NoteRequestDTO deletedNote = noteService.deleteNote(id_note1);
 
         verify(noteRepository).findById(id_note1);
         verifyNoMoreInteractions(noteRepository);
@@ -498,7 +498,7 @@ public class NoteServiceTest {
 
     @Test
     void validNoteDTO() {
-        NoteDTO noteDTO = new NoteDTO();
+        NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid title");
         noteDTO.setDescription("valid description");
@@ -508,7 +508,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_NullTitle() {
-        NoteDTO noteDTO = new NoteDTO();
+        NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setDescription("Valid Description");
 
@@ -518,7 +518,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_NullDescription() {
-        NoteDTO noteDTO = new NoteDTO();
+        NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid Title");
 
@@ -528,7 +528,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_OnlySpacesTitle() {
-        NoteDTO noteDTO = new NoteDTO();
+        NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("   ");
         noteDTO.setDescription("Valid Description");
@@ -539,7 +539,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_OnlySpacesDescription() {
-        NoteDTO noteDTO = new NoteDTO();
+        NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid Title");
         noteDTO.setDescription("  ");
@@ -551,7 +551,7 @@ public class NoteServiceTest {
 
 
 
-    private void repeatedVerifications(NoteDTO result) {
+    private void repeatedVerifications(NoteRequestDTO result) {
 
         verify(noteRepository).findById(id_note1);
         verify(tagRepository).findById(id_tag1);

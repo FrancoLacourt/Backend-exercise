@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.request.NoteDTO;
-import com.example.backend.dto.request.TagDTO;
+import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.exception.MyException;
 import com.example.backend.service.TagService;
 import org.springframework.http.HttpStatus;
@@ -21,20 +21,20 @@ public class TagController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<TagDTO> createTag(@RequestParam String tagName) throws MyException {
+    public ResponseEntity<TagRequestDTO> createTag(@RequestParam String tagName) throws MyException {
 
         if (tagName == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         } else {
 
-            TagDTO savedTagDTO = tagService.createTag(tagName);
+            TagRequestDTO savedTagDTO = tagService.createTag(tagName);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedTagDTO);
         }
     }
 
     @GetMapping("/listOfTags")
-    public ResponseEntity<List<TagDTO>> getTags() {
-        List<TagDTO> tagsDTO = tagService.getAllTags();
+    public ResponseEntity<List<TagRequestDTO>> getTags() {
+        List<TagRequestDTO> tagsDTO = tagService.getAllTags();
 
         if (tagsDTO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -43,8 +43,8 @@ public class TagController {
     }
 
     @GetMapping("/{id_tag}")
-    public ResponseEntity<TagDTO> findTagById(@PathVariable Long id_tag) {
-        TagDTO tagDTO = tagService.findTagById(id_tag);
+    public ResponseEntity<TagRequestDTO> findTagById(@PathVariable Long id_tag) {
+        TagRequestDTO tagDTO = tagService.findTagById(id_tag);
 
         if (tagDTO != null) {
             return ResponseEntity.status(HttpStatus.OK).body(tagDTO);
@@ -54,8 +54,8 @@ public class TagController {
     }
 
     @GetMapping("/getNotesByTag/{id_tag}")
-    public ResponseEntity<List<NoteDTO>> getNotesByTag(@PathVariable Long id_tag) {
-        List<NoteDTO> notesDTO = tagService.getNotes(id_tag);
+    public ResponseEntity<List<NoteRequestDTO>> getNotesByTag(@PathVariable Long id_tag) {
+        List<NoteRequestDTO> notesDTO = tagService.getNotes(id_tag);
 
         if (notesDTO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -65,9 +65,9 @@ public class TagController {
     }
 
     @PutMapping("/update/{id_tag}")
-    public ResponseEntity<TagDTO> updateTag(@PathVariable Long id_tag, @RequestParam String newTagName) throws MyException {
+    public ResponseEntity<TagRequestDTO> updateTag(@PathVariable Long id_tag, @RequestParam String newTagName) throws MyException {
 
-        TagDTO tagDTO;
+        TagRequestDTO tagDTO;
 
         try {
             tagDTO = tagService.updateTag(id_tag, newTagName);
@@ -79,8 +79,8 @@ public class TagController {
     }
 
     @DeleteMapping("/delete/{id_tag}")
-    public ResponseEntity<TagDTO> deleteTag(@PathVariable Long id_tag) {
-        TagDTO tagDTO = tagService.findTagById(id_tag);
+    public ResponseEntity<TagRequestDTO> deleteTag(@PathVariable Long id_tag) {
+        TagRequestDTO tagDTO = tagService.findTagById(id_tag);
 
         if (tagDTO != null) {
             tagService.deleteTag(id_tag);
