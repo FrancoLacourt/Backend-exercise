@@ -1,7 +1,7 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.dto.NoteDTO;
-import com.example.backend.dto.TagDTO;
+import com.example.backend.dto.request.NoteDTO;
+import com.example.backend.dto.request.TagDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.ExceptionMethods;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package com.example.backend.mapper;
 
-import com.example.backend.dto.NoteDTO;
+import com.example.backend.dto.request.NoteDTO;
 import com.example.backend.entity.Note;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

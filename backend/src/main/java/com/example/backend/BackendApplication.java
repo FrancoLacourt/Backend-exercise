@@ -21,10 +21,10 @@ public class BackendApplication {
                 .info(new Info()
                         .title("lacourt-e2d595 API")
                         .version("1.0.0")
-                        .description("API for lacourt-e2d595 application")
-                        .termsOfService("http://swagger.io/terms")
+                        .description("API for Backend application")
+                        .termsOfService("https://swagger.io/terms")
                         .license(new License().name("Apache 2.0")
-                                .url("http://springdoc.org")));
+                                .url("https://springdoc.org")));
     }
 
 }

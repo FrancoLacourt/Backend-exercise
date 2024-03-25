@@ -1,6 +1,7 @@
-package com.example.backend.dto;
+package com.example.backend.dto.request;
 
 import com.example.backend.entity.Note;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;

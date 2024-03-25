@@ -91,6 +91,8 @@ public class AuthServiceImpl implements AuthService {
         String lastName = user.getLastName();
         String email = user.getEmail();
         String displayName = user.getDisplayName();
+        boolean isActive = user.isActive();
+        LocalDate registrationDate = user.getRegistrationDate();
 
         return AuthResponseDTO.builder()
                 .id(id)
@@ -99,6 +101,8 @@ public class AuthServiceImpl implements AuthService {
                 .name(name)
                 .lastName(lastName)
                 .email(email)
+                .isActive(isActive)
+                .registrationDate(registrationDate)
                 .build();
     }
 

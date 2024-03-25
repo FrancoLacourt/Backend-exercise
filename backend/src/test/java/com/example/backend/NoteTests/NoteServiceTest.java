@@ -1,7 +1,7 @@
 package com.example.backend.NoteTests;
 
-import com.example.backend.dto.NoteDTO;
-import com.example.backend.dto.TagDTO;
+import com.example.backend.dto.request.NoteDTO;
+import com.example.backend.dto.request.TagDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;

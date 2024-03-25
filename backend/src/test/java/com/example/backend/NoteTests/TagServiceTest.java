@@ -1,7 +1,7 @@
 package com.example.backend.NoteTests;
 
-import com.example.backend.dto.NoteDTO;
-import com.example.backend.dto.TagDTO;
+import com.example.backend.dto.request.NoteDTO;
+import com.example.backend.dto.request.TagDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;
@@ -15,8 +15,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.verification.NoMoreInteractions;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
