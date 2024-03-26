@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
@@ -116,8 +117,11 @@ public class NoteServiceImpl implements NoteService {
 
     //Updates title and description of a note.
     @Override
-    public NoteResponseDTO updateNote(Long id_note, NoteRequestDTO updatedNoteRequestDTO) throws MyException {
-        validate(updatedNoteRequestDTO);
+    public NoteResponseDTO updateNote(Long id_note, UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException {
+
+        NoteRequestDTO validateRequest = noteMapper.updatedNoteRequestDTOToNoteRequestDTO(updatedNoteRequestDTO);
+
+        validate(validateRequest);
 
         Note note = noteRepository.findById(id_note).orElse(null);
 

@@ -2,6 +2,7 @@ package com.example.backend.NoteTests;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
@@ -252,7 +253,7 @@ public class NoteServiceTest {
     @Test
     void updateNoteTest() throws MyException {
 
-        NoteRequestDTO updatedNoteRequestDTO = new NoteRequestDTO();
+        UpdatedNoteRequestDTO updatedNoteRequestDTO = new UpdatedNoteRequestDTO();
 
         updatedNoteRequestDTO.setTitle("Updated title");
         updatedNoteRequestDTO.setDescription("Updated description");
@@ -273,7 +274,7 @@ public class NoteServiceTest {
     @Test
     void updateNoteTest_WhenNoteDoesNotExist() throws MyException {
 
-        NoteRequestDTO updatedNoteRequestDTO = new NoteRequestDTO();
+        UpdatedNoteRequestDTO updatedNoteRequestDTO = new UpdatedNoteRequestDTO();
 
         updatedNoteRequestDTO.setTitle("Updated title");
         updatedNoteRequestDTO.setDescription("Updated description");

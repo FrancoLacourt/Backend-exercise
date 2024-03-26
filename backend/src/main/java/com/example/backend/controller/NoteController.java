@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
+import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.exception.MyException;
@@ -76,7 +77,7 @@ public class NoteController {
     }
 
     @PutMapping("/update/{id_note}")
-    public ResponseEntity<NoteResponseDTO> updateNote(@PathVariable Long id_note, @RequestBody NoteRequestDTO updatedNoteRequestDTO) throws MyException {
+    public ResponseEntity<NoteResponseDTO> updateNote(@PathVariable Long id_note, @RequestBody UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException {
 
         NoteResponseDTO noteResponseDTO = noteService.updateNote(id_note, updatedNoteRequestDTO);
 
