@@ -7,11 +7,13 @@ import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
+import com.example.backend.entity.UserEntity;
 import com.example.backend.exception.MyException;
 import com.example.backend.mapper.NoteMapper;
 import com.example.backend.mapper.TagMapper;
 import com.example.backend.repository.NoteRepository;
 import com.example.backend.repository.TagRepository;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.service.TagService;
 import com.example.backend.service.impl.NoteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +38,9 @@ public class NoteServiceTest {
 
     @Mock
     private TagRepository tagRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private NoteMapper noteMapper;
@@ -142,6 +147,10 @@ public class NoteServiceTest {
     @Test
     void createNoteTest() throws MyException {
 
+        Long id_user = 1L;
+
+        UserEntity user = new UserEntity();
+
         NoteResponseDTO newNoteResponseDTO = new NoteResponseDTO();
         Note newNote = new Note();
 
@@ -163,10 +172,11 @@ public class NoteServiceTest {
 
         when(noteMapper.noteResponseDTOToNote(newNoteResponseDTO)).thenReturn(note1);
         when(noteRepository.save(note1)).thenReturn(newNote);
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
         when(noteMapper.noteToNoteResponseDTO(newNote)).thenReturn(new NoteResponseDTO());
 
         // Llamada al método a probar
-            NoteResponseDTO resultNoteResponseDTO = noteService.createNote(inputNoteRequestDTO);
+            NoteResponseDTO resultNoteResponseDTO = noteService.createNote(inputNoteRequestDTO, id_user);
 
         verify(tagRepository).saveAll(tags);
 
@@ -180,6 +190,7 @@ public class NoteServiceTest {
         assertEquals(newNoteResponseDTO.getDescription(), inputNoteRequestDTO.getDescription());
         assertEquals(newNoteResponseDTO.getTags(), note1.getTags());
         assertTrue(newNoteResponseDTO.isEnabled());
+        assertTrue(user.getNotes().contains(newNote));
 
         // Verificación de llamadas a los mocks
         verify(tagService).getOrCreateTags(any());
@@ -188,6 +199,48 @@ public class NoteServiceTest {
         verify(noteRepository).save(note1);
         verify(noteMapper).noteToNoteResponseDTO(newNote);
     }
+
+    @Test
+    void createNoteTest_WhenUserDoesNotExist() throws MyException {
+
+        Long id_user = 1L;
+
+        UserEntity user = new UserEntity();
+
+        NoteResponseDTO newNoteResponseDTO = new NoteResponseDTO();
+        Note newNote = new Note();
+
+        inputNoteRequestDTO.setTitle("Valid title");
+        inputNoteRequestDTO.setDescription("Valid description");
+
+        when(tagService.getOrCreateTags(inputNoteRequestDTO.getTagNames())).thenReturn(tagResponseListDTO);
+        when(tagMapper.tagResponseListDTOToTagList(tagResponseListDTO)).thenReturn(tags);
+
+        when(noteMapper.noteRequestDTOToNoteResponseDTO(inputNoteRequestDTO)).thenReturn(newNoteResponseDTO);
+
+        newNoteResponseDTO.setTitle(inputNoteRequestDTO.getTitle());
+        newNoteResponseDTO.setDescription(inputNoteRequestDTO.getDescription());
+
+        note1.setTitle(newNoteResponseDTO.getTitle());
+        note1.setDescription(newNoteResponseDTO.getDescription());
+        note1.setTags(tags);
+        note1.setEnabled(true);
+
+        when(noteMapper.noteResponseDTOToNote(newNoteResponseDTO)).thenReturn(note1);
+        when(noteRepository.save(note1)).thenReturn(newNote);
+        when(userRepository.findById(id_user)).thenReturn(Optional.empty());
+        when(noteMapper.noteToNoteResponseDTO(newNote)).thenReturn(new NoteResponseDTO());
+
+        // Llamada al método a probar
+        NoteResponseDTO resultNoteResponseDTO = noteService.createNote(inputNoteRequestDTO, id_user);
+
+        verify(tagService).getOrCreateTags(any());
+        verify(tagMapper).tagResponseListDTOToTagList(tagResponseListDTO);
+        verify(noteMapper).noteResponseDTOToNote(newNoteResponseDTO);
+        verify(noteRepository).save(note1);
+        assertNull(resultNoteResponseDTO);
+    }
+
 
     @Test
     void getAllNotesTest() {
