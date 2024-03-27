@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface NoteService {
 
-    NoteResponseDTO createNote(NoteRequestDTO noteDTO) throws MyException;
+    NoteResponseDTO createNote(NoteRequestDTO noteDTO, Long id_user) throws MyException;
     List<NoteResponseDTO> getAllNotes();
     List<NoteResponseDTO> getEnabledNotes();
     List<NoteResponseDTO> getDisabledNotes();
