@@ -6,18 +6,21 @@ import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
+import com.example.backend.entity.UserEntity;
 import com.example.backend.exception.ExceptionMethods;
 import com.example.backend.exception.MyException;
 import com.example.backend.mapper.NoteMapper;
 import com.example.backend.mapper.TagMapper;
 import com.example.backend.repository.NoteRepository;
 import com.example.backend.repository.TagRepository;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.service.NoteService;
 import com.example.backend.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,14 +32,16 @@ public class NoteServiceImpl implements NoteService {
     private NoteMapper noteMapper;
     private TagService tagService;
     private TagMapper tagMapper;
+    private UserRepository userRepository;
 
     @Autowired
-    public NoteServiceImpl(NoteRepository noteRepository, NoteMapper noteMapper, TagService tagService, TagMapper tagMapper, TagRepository tagRepository) {
+    public NoteServiceImpl(NoteRepository noteRepository, NoteMapper noteMapper, TagService tagService, TagMapper tagMapper, TagRepository tagRepository, UserRepository userRepository) {
         this.noteRepository = noteRepository;
         this.noteMapper = noteMapper;
         this.tagService = tagService;
         this.tagMapper = tagMapper;
         this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
     }
 
     public NoteServiceImpl() {
@@ -47,7 +52,7 @@ public class NoteServiceImpl implements NoteService {
     //Validates input, associates tags, create note and save all to the repository.
     @Override
     @Transactional
-    public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO) throws MyException {
+    public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO, Long id_user) throws MyException {
         validate(noteRequestDTO);
 
         List<TagResponseDTO> tagResponseListDTO = tagService.getOrCreateTags(noteRequestDTO.getTagNames());
@@ -68,7 +73,20 @@ public class NoteServiceImpl implements NoteService {
 
         tagRepository.saveAll(tags);
 
+        UserEntity user = userRepository.findById(id_user).orElse(null);
 
+        if (user != null) {
+
+            if (user.getNotes() == null) {
+                // Si es null, inicializar la lista
+                user.setNotes(new ArrayList<>());
+            }
+
+            user.getNotes().add(createdNote);
+        } else {
+            System.out.println("It wasn't possible to find an user with the ID: " + id_user);
+            return null;
+        }
         return noteMapper.noteToNoteResponseDTO(createdNote);
     }
 
@@ -119,7 +137,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public NoteResponseDTO updateNote(Long id_note, UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException {
 
-        NoteRequestDTO validateRequest = noteMapper.updatedNoteRequestDTOToNoteRequestDTO(updatedNoteRequestDTO);
+        NoteRequestDTO validateRequest = new NoteRequestDTO();
+
+        validateRequest.setTitle(updatedNoteRequestDTO.getTitle());
+        validateRequest.setDescription(updatedNoteRequestDTO.getDescription());
 
         validate(validateRequest);
 
