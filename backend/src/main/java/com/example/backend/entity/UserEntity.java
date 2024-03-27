@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -37,6 +38,8 @@ public class UserEntity implements UserDetails{
     LocalDate registrationDate;
     boolean isActive = true;
 
+    @OneToMany
+    private List<Note> notes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
