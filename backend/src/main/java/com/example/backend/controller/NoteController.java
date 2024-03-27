@@ -1,11 +1,12 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.request.NoteRequestDTO;
-import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
+import com.example.backend.entity.UserEntity;
 import com.example.backend.exception.MyException;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.service.NoteService;
 import com.example.backend.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class NoteController {
 
     private final NoteService noteService;
     private final TagService tagService;
+    private UserRepository userRepository;
 
     @Autowired
     public NoteController(NoteService noteService, TagService tagService) {
@@ -30,16 +32,25 @@ public class NoteController {
     }
 
 
-    @PostMapping("/create")
-    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO) throws MyException {
+    @PostMapping("/create/{id_user}")
+    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO, @PathVariable Long id_user) throws MyException {
 
-        if (noteRequestDTO.getTitle() == null || noteRequestDTO.getDescription() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        UserEntity user = userRepository.findById(id_user).orElse(null);
+
+        if (user != null) {
+
+            if (noteRequestDTO.getTitle() == null || noteRequestDTO.getDescription() == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            } else {
+
+                NoteResponseDTO savedNoteResponseDTO = noteService.createNote(noteRequestDTO, id_user);
+                return ResponseEntity.status(HttpStatus.CREATED).body(savedNoteResponseDTO);
+            }
+
         } else {
-
-            NoteResponseDTO savedNoteResponseDTO = noteService.createNote(noteRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedNoteResponseDTO);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
+
     }
 
     @GetMapping("/listOfNotes")
