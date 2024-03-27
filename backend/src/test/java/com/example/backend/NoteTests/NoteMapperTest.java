@@ -2,6 +2,7 @@ package com.example.backend.NoteTests;
 
 
 import com.example.backend.dto.request.NoteRequestDTO;
+import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;

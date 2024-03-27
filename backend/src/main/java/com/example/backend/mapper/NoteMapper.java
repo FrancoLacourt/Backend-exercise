@@ -15,7 +15,5 @@ public interface NoteMapper {
     NoteResponseDTO noteToNoteResponseDTO(Note note);
     Note noteResponseDTOToNote(NoteResponseDTO noteResponseDTO);
     NoteResponseDTO noteRequestDTOToNoteResponseDTO(NoteRequestDTO noteRequestDTO);
-    NoteRequestDTO updatedNoteRequestDTOToNoteRequestDTO(UpdatedNoteRequestDTO updatedNoteRequestDTO);
     List<NoteResponseDTO> toNoteResponseDTOList(List<Note> notes);
-
 }
