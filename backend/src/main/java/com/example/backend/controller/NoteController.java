@@ -75,6 +75,28 @@ public class NoteController {
         }
     }
 
+    @GetMapping("/allNotesByUser/{id_user}")
+    public ResponseEntity<List<NoteResponseDTO>> getAllNotesByUser(@PathVariable Long id_user) {
+        List<NoteResponseDTO> notesByUser = noteService.getAllNotesByUser(id_user);
+
+        if (notesByUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(notesByUser);
+        }
+    }
+
+    @GetMapping("/allEnabledNotesByUser/{id_user}")
+    public ResponseEntity<List<NoteResponseDTO>> getAllEnabledNotesByUser(@PathVariable Long id_user) {
+        List<NoteResponseDTO> enabledNotesByUser = noteService.getAllEnabledNotesByUser(id_user);
+
+        if (enabledNotesByUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(enabledNotesByUser);
+        }
+    }
+
     @GetMapping("/{id_note}")
     public ResponseEntity<NoteResponseDTO> findNoteById(@PathVariable Long id_note) {
 

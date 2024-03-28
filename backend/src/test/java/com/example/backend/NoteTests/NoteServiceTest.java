@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.yaml.snakeyaml.events.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class NoteServiceTest {
     private Long id_note2;
     private Long id_tag1;
     private Long id_tag2;
+    private Long id_user;
     private Note note1;
     private Note note2;
     private Tag tag1;
@@ -71,6 +73,7 @@ public class NoteServiceTest {
     private List<Note> notes;
     private List<TagResponseDTO> tagResponseListDTO;
     private List<NoteResponseDTO> noteResponseListDTO;
+    private UserEntity user;
 
     @BeforeEach
     void setUp() {
@@ -80,6 +83,8 @@ public class NoteServiceTest {
 
         id_tag1 = 1L;
         id_tag2 = 2L;
+
+        id_user = 1L;
 
         note1 = new Note();
         note2 = new Note();
@@ -100,6 +105,8 @@ public class NoteServiceTest {
 
         tagResponseListDTO = new ArrayList<>();
         noteResponseListDTO = new ArrayList<>();
+
+        user = new UserEntity();
 
         note1.setId_note(id_note1);
         note1.setTitle("Valid title");
@@ -136,6 +143,10 @@ public class NoteServiceTest {
         tagResponseDTO2.setTagName(tag2.getTagName());
         tagResponseDTO2.setId_tag(id_tag2);
         tagResponseListDTO.add(tagResponseDTO2);
+
+        user.setId(1L);
+        user.setName("Franco");
+        user.setLastName("Lacourt");;
     }
 
     @Test
@@ -278,6 +289,62 @@ public class NoteServiceTest {
         List<NoteResponseDTO> disabledNoteResponseListDTO = noteService.getDisabledNotes();
 
         assertEquals(1, disabledNoteResponseListDTO.size());
+    }
+
+    @Test
+    void getAllNotesByUserTest() {
+
+        user.setNotes(notes);
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
+        when(noteMapper.toNoteResponseDTOList(notes)).thenReturn(noteResponseListDTO);
+
+        List<NoteResponseDTO> noteResponseDTOListByUser = noteService.getAllNotesByUser(id_user);
+
+        assertEquals(noteResponseDTOListByUser, noteResponseListDTO);
+        verify(userRepository).findById(id_user);
+        verify(noteMapper).toNoteResponseDTOList(notes);
+    }
+
+    @Test
+    void getAllNotesByUserTest_WhenUserDoesNotExist() {
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.empty());
+
+        List<NoteResponseDTO> noteResponseDTOListByUser = noteService.getAllNotesByUser(id_user);
+
+        assertNull(noteResponseDTOListByUser);
+        verifyNoInteractions(noteMapper);
+    }
+
+    @Test
+    void getAllEnabledNotesByUserTest() {
+
+        note1.setEnabled(true);
+        note2.setEnabled(false);
+
+        user.setNotes(notes);
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
+        when(noteMapper.noteToNoteResponseDTO(note1)).thenReturn(noteResponseDTO1);
+
+        List <NoteResponseDTO> enabledNoteResponseDTOListByUser = noteService.getAllEnabledNotesByUser(id_user);
+
+        assertEquals(1, enabledNoteResponseDTOListByUser.size());
+        assertEquals(enabledNoteResponseDTOListByUser.get(0), noteResponseDTO1);
+        verify(userRepository).findById(id_user);
+        verify(noteMapper).noteToNoteResponseDTO(note1);
+    }
+
+    @Test
+    void getAllEnabledNotesByUserTest_WhenUserDoesNotExist() {
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.empty());
+
+        List<NoteResponseDTO> enabledNoteResponseDTOListByUser = noteService.getAllEnabledNotesByUser(id_user);
+
+        assertNull(enabledNoteResponseDTOListByUser);
+        verifyNoInteractions(noteMapper);
     }
 
     @Test
