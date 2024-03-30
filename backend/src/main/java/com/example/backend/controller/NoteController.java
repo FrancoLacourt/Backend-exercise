@@ -23,12 +23,13 @@ public class NoteController {
 
     private final NoteService noteService;
     private final TagService tagService;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public NoteController(NoteService noteService, TagService tagService) {
+    public NoteController(NoteService noteService, TagService tagService, UserRepository userRepository) {
         this.noteService = noteService;
         this.tagService = tagService;
+        this.userRepository = userRepository;
     }
 
 
@@ -171,12 +172,13 @@ public class NoteController {
         }
     }
 
-    @DeleteMapping("/delete/{id_note}")
-    public ResponseEntity<NoteResponseDTO> deleteNote(@PathVariable Long id_note) {
+    @DeleteMapping("/delete/{id_note}/{id_user}")
+    public ResponseEntity<NoteResponseDTO> deleteNote(@PathVariable Long id_note, @PathVariable Long id_user) {
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
+        UserEntity user = userRepository.findById(id_user).orElse(null);
 
-        if (noteResponseDTO != null) {
-            noteService.deleteNote(id_note);
+        if (noteResponseDTO != null && user != null) {
+            noteService.deleteNote(id_note, id_user);
             return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
