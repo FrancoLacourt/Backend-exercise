@@ -260,20 +260,28 @@ public class NoteServiceImpl implements NoteService {
 
     //Deletes a note, removing associations with tags.
     @Override
-    public NoteResponseDTO deleteNote(Long id_note) {
+    public NoteResponseDTO deleteNote(Long id_note, Long id_user) {
         Note note = noteRepository.findById(id_note).orElse(null);
+        UserEntity user = userRepository.findById(id_user).orElse(null);
 
-        if (note != null) {
+        if (note != null && user != null) {
             for (Tag tag : note.getTags()) {
                 tag.getNotes().remove(note);
             }
             note.getTags().clear();
 
+            if (user.getNotes() == null) {
+                // Si es null, inicializar la lista
+                user.setNotes(new ArrayList<>());
+            }
+
+            user.getNotes().remove(note);
+
             noteRepository.delete(note);
 
             return noteMapper.noteToNoteResponseDTO(note);
         } else {
-            System.out.println("It wasn't possible to find a note with the ID: " + id_note);
+            System.out.println("The user and/or note does not exist");
             return null;
         }
     }
