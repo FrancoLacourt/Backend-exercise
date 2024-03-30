@@ -596,23 +596,44 @@ public class NoteServiceTest {
     void deleteNoteTest() {
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
+
+        user.setNotes(new ArrayList<>());
+        user.getNotes().add(note1);
 
         when(noteMapper.noteToNoteResponseDTO(note1)).thenReturn(new NoteResponseDTO());
 
-        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1);
+        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
 
         verify(noteRepository).delete(note1);
 
         assertFalse(note1.getTags().contains(tag1));
         assertFalse(tag1.getNotes().contains(note1));
+        assertFalse(user.getNotes().contains(note1));
     }
 
     @Test
     void deleteNoteTest_WhenNoteDoesNotExist() {
 
         when(noteRepository.findById(id_note1)).thenReturn(Optional.empty());
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
 
-        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1);
+        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
+
+        verify(noteRepository).findById(id_note1);
+        verifyNoMoreInteractions(noteRepository);
+        verifyNoInteractions(noteMapper);
+
+        assertNull(deletedNoteResponseDTO);
+    }
+
+    @Test
+    void deleteNoteTest_WhenUserDoesNotExist() {
+
+        when(noteRepository.findById(id_note1)).thenReturn(Optional.of(note1));
+        when(userRepository.findById(id_user)).thenReturn(Optional.empty());
+
+        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
 
         verify(noteRepository).findById(id_note1);
         verifyNoMoreInteractions(noteRepository);
