@@ -21,7 +21,5 @@ public interface NoteService {
     NoteResponseDTO removeTagFromNote(Long id_note, Long id_tag);
     NoteResponseDTO disableNote(Long id_note);
     NoteResponseDTO enableNote(Long id_note);
-    NoteResponseDTO deleteNote(Long id_note);
-
-
+    NoteResponseDTO deleteNote(Long id_note, Long id_user);
 }
