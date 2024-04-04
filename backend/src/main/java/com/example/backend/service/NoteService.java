@@ -15,6 +15,7 @@ public interface NoteService {
     List<NoteResponseDTO> getDisabledNotes();
     List<NoteResponseDTO> getAllNotesByUser(Long id_user);
     List<NoteResponseDTO> getAllEnabledNotesByUser(Long id_user);
+    List<NoteResponseDTO> getAllDisabledNotesByUser(Long id_user);
     NoteResponseDTO findNoteById(Long id_note);
     NoteResponseDTO updateNote(Long id_note, UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException;
     NoteResponseDTO addTagToNote(Long id_note, Long id_tag);

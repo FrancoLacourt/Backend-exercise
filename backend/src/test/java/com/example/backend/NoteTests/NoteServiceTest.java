@@ -337,6 +337,25 @@ public class NoteServiceTest {
     }
 
     @Test
+    void getAllDisabledNotesByUserTest() {
+
+        note1.setEnabled(false);
+        note2.setEnabled(true);
+
+        user.setNotes(notes);
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
+        when(noteMapper.noteToNoteResponseDTO(note1)).thenReturn(noteResponseDTO1);
+
+        List <NoteResponseDTO> disabledNoteResponseDTOListByUser = noteService.getAllDisabledNotesByUser(id_user);
+
+        assertEquals(1, disabledNoteResponseDTOListByUser.size());
+        assertEquals(disabledNoteResponseDTOListByUser.get(0), noteResponseDTO1);
+        verify(userRepository).findById(id_user);
+        verify(noteMapper).noteToNoteResponseDTO(note1);
+    }
+
+    @Test
     void getAllEnabledNotesByUserTest_WhenUserDoesNotExist() {
 
         when(userRepository.findById(id_user)).thenReturn(Optional.empty());
