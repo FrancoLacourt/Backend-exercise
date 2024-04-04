@@ -25,7 +25,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthLoginRequestDTO request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthLoginRequestDTO request)
+
+    {
+        AuthResponseDTO authResponseDTO = authService.login(request);
+
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer" + authResponseDTO.getToken())
+                .body(authResponseDTO);
     }
 }
