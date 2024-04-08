@@ -1,7 +1,6 @@
 package com.example.backend.NoteTests;
 
 import com.example.backend.dto.request.NoteRequestDTO;
-import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
@@ -20,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.yaml.snakeyaml.events.Event;
 
 import java.util.ArrayList;
 import java.util.List;
