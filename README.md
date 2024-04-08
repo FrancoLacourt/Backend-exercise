@@ -17,8 +17,9 @@ This is not deployed, yet. So if you want to test it by yourself, you must creat
 You should have something like the following:
 
 database.url=jdbc:mysql://localhost:YourPort/YourDataBaseName?allowPublicKeyRetrieval=true&useSSL=false&useTimezone=true&serverTimezone=GMT&characterEncoding=UTF-8
-database.username=root
-database.password=root
+
+database.username=YourUsername
+database.password=YourPassword
 
 and don´t change JWT_SECRET constant, otherwise it won´t work.
 
