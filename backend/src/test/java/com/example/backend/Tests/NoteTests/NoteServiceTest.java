@@ -1,4 +1,4 @@
-package com.example.backend.NoteTests;
+package com.example.backend.Tests.NoteTests;
 
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.UpdatedNoteRequestDTO;
@@ -610,7 +610,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    void deleteNoteTest() {
+    void NoteTest() {
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
         when(userRepository.findById(id_user)).thenReturn(Optional.of(user));

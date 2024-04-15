@@ -1,4 +1,4 @@
-package com.example.backend.NoteTests;
+package com.example.backend.Tests.NoteTests;
 
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
