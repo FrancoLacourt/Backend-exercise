@@ -65,6 +65,17 @@ public class NoteController {
         }
     }
 
+    @GetMapping("/listOfTagsByUserNotes/{id_user}")
+    public ResponseEntity<List<TagResponseDTO>> getTagsByUserNotes (@PathVariable Long id_user) {
+        List<TagResponseDTO> tagResponseListDTO = noteService.getAllTagsByUserNotes(id_user);
+
+        if (tagResponseListDTO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(tagResponseListDTO);
+        }
+    }
+
     @GetMapping("/listOfDisabledNotes")
     public ResponseEntity<List<NoteResponseDTO>> getDisabledNotes() {
         List<NoteResponseDTO> noteResponseListDTO = noteService.getDisabledNotes();
