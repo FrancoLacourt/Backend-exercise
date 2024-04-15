@@ -106,14 +106,14 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    private void validatePassword(AuthRegisterRequestDTO request) throws MyException {
+    public void validatePassword(AuthRegisterRequestDTO request) throws InvalidPasswordException {
 
         if (!StringUtils.hasText(request.getPassword()) || !StringUtils.hasText(request.getRepeatedPassword())) {
-            throw new InvalidPasswordException("Passwords don't match");
+            throw new InvalidPasswordException("One or both passwords are empty.");
         }
 
         if (!request.getPassword().equals(request.getRepeatedPassword())) {
-            throw new InvalidPasswordException("Passwords don't match");
+            throw new InvalidPasswordException("Passwords don't match.");
         }
     }
 }
