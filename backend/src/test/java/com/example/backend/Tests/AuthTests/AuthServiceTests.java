@@ -9,8 +9,6 @@ import com.example.backend.exception.MyException;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.JwtService;
 import com.example.backend.service.impl.AuthServiceImpl;
-import org.h2.engine.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -20,10 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.lang.ref.PhantomReference;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
