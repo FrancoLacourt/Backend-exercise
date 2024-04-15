@@ -1,4 +1,4 @@
-package com.example.backend.NoteTests;
+package com.example.backend.Tests.TagTests;
 
 import com.example.backend.entity.Note;
 import com.example.backend.entity.Tag;
@@ -97,6 +97,16 @@ public class TagRepositoryTest {
         List<Tag> foundTags = tagRepository.findAll();
 
         assertEquals(tags, foundTags);
+    }
+
+    @Test
+    void findTagByTagName() {
+        tagRepository.save(tag1);
+
+        Optional<Tag> foundTag = tagRepository.findTagByTagName("Music");
+
+        assertTrue(foundTag.isPresent());
+        assertEquals(foundTag.get().getTagName(), "Music");
     }
     
 }

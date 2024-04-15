@@ -1,6 +1,5 @@
-package com.example.backend.NoteTests;
+package com.example.backend.Tests.TagTests;
 
-import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
