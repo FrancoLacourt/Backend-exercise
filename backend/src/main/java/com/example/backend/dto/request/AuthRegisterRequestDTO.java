@@ -13,4 +13,19 @@ public class AuthRegisterRequestDTO {
     private String email;
     private String password;
     private String repeatedPassword;
+
+
+    public AuthRegisterRequestDTO() {
+    }
+
+    public AuthRegisterRequestDTO(String name, String lastName, String displayName, String email, String password, String repeatedPassword) {
+        this.name = name;
+        this.lastName = lastName;
+        this.displayName = displayName;
+        this.email = email;
+        this.password = password;
+        this.repeatedPassword = repeatedPassword;
+    }
 }
+
+
