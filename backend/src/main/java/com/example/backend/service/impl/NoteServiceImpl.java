@@ -134,6 +134,32 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public List<TagResponseDTO> getAllTagsByUserNotes(Long id_user) {
+        List<TagResponseDTO> tags = new ArrayList<>();
+        UserEntity user = userRepository.findById(id_user).orElse(null);
+
+        if (user != null) {
+            List<Note> noteListByUser = user.getNotes();
+            for (Note note : noteListByUser) {
+                for (Tag tag : note.getTags()) {
+
+                    if (tags.isEmpty()) {
+                        tags.add(tagMapper.tagToTagResponseDTO(tag));
+                    } else {
+                        if (!tags.contains(tagMapper.tagToTagResponseDTO(tag))) {
+                            tags.add(tagMapper.tagToTagResponseDTO(tag));
+                        }
+                    }
+                }
+            }
+        } else {
+            System.out.println("It wasn't possible to find a user with the ID: " + id_user);
+            return null;
+        }
+        return tags;
+    }
+
+    @Override
     public List<NoteResponseDTO> getAllEnabledNotesByUser(Long id_user) {
 
         UserEntity user = userRepository.findById(id_user).orElse(null);
