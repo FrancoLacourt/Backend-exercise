@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
 import com.example.backend.exception.MyException;
-
 import java.util.List;
 
 public interface TagService {
