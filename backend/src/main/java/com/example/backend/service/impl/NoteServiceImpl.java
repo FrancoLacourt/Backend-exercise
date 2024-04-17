@@ -19,7 +19,6 @@ import com.example.backend.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +46,6 @@ public class NoteServiceImpl implements NoteService {
     public NoteServiceImpl() {
 
     }
-
 
     //Validates input, associates tags, create note and save all to the repository.
     @Override
@@ -90,7 +88,6 @@ public class NoteServiceImpl implements NoteService {
         return noteMapper.noteToNoteResponseDTO(createdNote);
     }
 
-
     @Override
     public List<NoteResponseDTO> getAllNotes() {
 
@@ -98,7 +95,6 @@ public class NoteServiceImpl implements NoteService {
 
         return noteMapper.toNoteResponseDTOList(notes);
     }
-
 
     // Retrieve the notes that are enabled.
     @Override
@@ -214,7 +210,6 @@ public class NoteServiceImpl implements NoteService {
         }
     }
 
-
     //Updates title and description of a note.
     @Override
     public NoteResponseDTO updateNote(Long id_note, UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException {
@@ -307,10 +302,10 @@ public class NoteServiceImpl implements NoteService {
         }
     }
 
-
     //Deletes a note, removing associations with tags.
     @Override
     public NoteResponseDTO deleteNote(Long id_note, Long id_user) {
+
         Note note = noteRepository.findById(id_note).orElse(null);
         UserEntity user = userRepository.findById(id_user).orElse(null);
 
