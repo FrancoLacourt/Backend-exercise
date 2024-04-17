@@ -19,11 +19,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -733,9 +731,9 @@ public class NoteServiceTest {
         assertNull(deletedNoteResponseDTO);
     }
 
-
     @Test
     void validNoteDTO() {
+
         NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid title");
@@ -746,6 +744,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_NullTitle() {
+
         NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setDescription("Valid Description");
@@ -756,6 +755,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_NullDescription() {
+
         NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid Title");
@@ -766,6 +766,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_OnlySpacesTitle() {
+
         NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("   ");
@@ -777,6 +778,7 @@ public class NoteServiceTest {
 
     @Test
     void validateNoteDTO_OnlySpacesDescription() {
+
         NoteRequestDTO noteDTO = new NoteRequestDTO();
 
         noteDTO.setTitle("Valid Title");
@@ -785,9 +787,6 @@ public class NoteServiceTest {
         MyException exception = assertThrows(MyException.class, () -> noteService.validate(noteDTO));
         assertEquals("Note's title or description can't be null or empty.", exception.getMessage());
     }
-
-
-
 
     private void repeatedVerifications(NoteResponseDTO resultNoteResponseDTO) {
 
@@ -799,6 +798,4 @@ public class NoteServiceTest {
 
         assertNull(resultNoteResponseDTO);
     }
-
-
 }
