@@ -3,9 +3,7 @@ package com.example.backend.service;
 import com.example.backend.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 public interface JwtService {
