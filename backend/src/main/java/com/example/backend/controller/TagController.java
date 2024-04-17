@@ -4,7 +4,9 @@ import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.TagRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
+import com.example.backend.entity.Tag;
 import com.example.backend.exception.MyException;
+import com.example.backend.repository.TagRepository;
 import com.example.backend.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,12 @@ import java.util.List;
 public class TagController {
 
     private final TagService tagService;
+    private final TagRepository tagRepository;
 
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService,
+                         TagRepository tagRepository) {
         this.tagService = tagService;
+        this.tagRepository = tagRepository;
     }
 
     @PostMapping("/create")
@@ -57,12 +62,20 @@ public class TagController {
 
     @GetMapping("/getNotesByTag/{id_tag}")
     public ResponseEntity<List<NoteResponseDTO>> getNotesByTag(@PathVariable Long id_tag) {
-        List<NoteResponseDTO> noteResponseListDTO = tagService.getNotes(id_tag);
 
-        if (noteResponseListDTO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        Tag tag = tagRepository.findById(id_tag).orElse(null);
+
+        if (tag != null) {
+
+            List<NoteResponseDTO> noteResponseListDTO = tagService.getNotes(id_tag);
+
+            if (noteResponseListDTO.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(noteResponseListDTO);
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(noteResponseListDTO);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
