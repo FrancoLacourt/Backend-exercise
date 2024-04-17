@@ -14,7 +14,6 @@ public class AuthRegisterRequestDTO {
     private String password;
     private String repeatedPassword;
 
-
     public AuthRegisterRequestDTO() {
     }
 
@@ -27,5 +26,3 @@ public class AuthRegisterRequestDTO {
         this.repeatedPassword = repeatedPassword;
     }
 }
-
-
