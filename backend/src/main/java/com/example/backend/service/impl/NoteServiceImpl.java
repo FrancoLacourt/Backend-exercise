@@ -245,11 +245,14 @@ public class NoteServiceImpl implements NoteService {
 
         if (note != null && tag != null) {
 
-            note.getTags().add(tag);
-            tag.getNotes().add(note);
+            if (!note.getTags().contains(tag)) {
 
-            noteRepository.save(note);
-            tagRepository.save(tag);
+                note.getTags().add(tag);
+                tag.getNotes().add(note);
+
+                noteRepository.save(note);
+                tagRepository.save(tag);
+            }
 
             return noteMapper.noteToNoteResponseDTO(note);
         } else {
@@ -312,21 +315,29 @@ public class NoteServiceImpl implements NoteService {
         UserEntity user = userRepository.findById(id_user).orElse(null);
 
         if (note != null && user != null) {
-            for (Tag tag : note.getTags()) {
-                tag.getNotes().remove(note);
+
+            if (user.getNotes().contains(note)) {
+
+                for (Tag tag : note.getTags()) {
+                    tag.getNotes().remove(note);
+                }
+                note.getTags().clear();
+
+                if (user.getNotes() == null) {
+                    // Si es null, inicializar la lista
+                    user.setNotes(new ArrayList<>());
+                }
+
+                user.getNotes().remove(note);
+
+                noteRepository.delete(note);
+
+                return noteMapper.noteToNoteResponseDTO(note);
+            } else {
+                System.out.println("User with the ID: " + id_user + " did not created note with the ID: " + id_note);
+                return null;
             }
-            note.getTags().clear();
 
-            if (user.getNotes() == null) {
-                // Si es null, inicializar la lista
-                user.setNotes(new ArrayList<>());
-            }
-
-            user.getNotes().remove(note);
-
-            noteRepository.delete(note);
-
-            return noteMapper.noteToNoteResponseDTO(note);
         } else {
             System.out.println("The user and/or note does not exist");
             return null;
