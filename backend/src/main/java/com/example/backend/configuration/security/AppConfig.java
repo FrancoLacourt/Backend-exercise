@@ -1,6 +1,5 @@
 package com.example.backend.configuration.security;
 
-import com.example.backend.exception.MyException;
 import com.example.backend.exception.ObjectNotFoundException;
 import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
