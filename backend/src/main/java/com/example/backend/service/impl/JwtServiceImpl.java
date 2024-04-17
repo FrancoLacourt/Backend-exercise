@@ -49,7 +49,6 @@ public class JwtServiceImpl implements JwtService {
         return claimsResolver.apply(claims);
     }
 
-
     private boolean isTokenExpired(String token) {
         return getExpiration(token).before(new Date());
     }
