@@ -1,6 +1,5 @@
 package com.example.backend.Tests.NoteTests;
 
-
 import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.entity.Note;
@@ -10,10 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
