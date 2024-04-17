@@ -4,11 +4,13 @@ import com.example.backend.dto.request.NoteRequestDTO;
 import com.example.backend.dto.request.UpdatedNoteRequestDTO;
 import com.example.backend.dto.response.NoteResponseDTO;
 import com.example.backend.dto.response.TagResponseDTO;
-import com.example.backend.entity.UserEntity;
+import com.example.backend.dto.response.UserResponseDTO;
+import com.example.backend.entity.Note;
 import com.example.backend.exception.MyException;
-import com.example.backend.repository.UserRepository;
+import com.example.backend.repository.NoteRepository;
 import com.example.backend.service.NoteService;
 import com.example.backend.service.TagService;
+import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +25,25 @@ public class NoteController {
 
     private final NoteService noteService;
     private final TagService tagService;
-    private final UserRepository userRepository;
+    private final NoteRepository noteRepository;
+    private final UserService userService;
 
     @Autowired
-    public NoteController(NoteService noteService, TagService tagService, UserRepository userRepository) {
+    public NoteController(NoteService noteService, TagService tagService,
+                          NoteRepository noteRepository, UserService userService) {
         this.noteService = noteService;
         this.tagService = tagService;
-        this.userRepository = userRepository;
+        this.noteRepository = noteRepository;
+        this.userService = userService;
     }
 
 
     @PostMapping("/create/{id_user}")
     public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO, @PathVariable Long id_user) throws MyException {
 
-        UserEntity user = userRepository.findById(id_user).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(id_user);
 
-        if (user != null) {
+        if (userResponseDTO != null) {
 
             if (noteRequestDTO.getTitle() == null || noteRequestDTO.getDescription() == null) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -49,7 +54,7 @@ public class NoteController {
             }
 
         } else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
     }
@@ -67,12 +72,20 @@ public class NoteController {
 
     @GetMapping("/listOfTagsByUserNotes/{id_user}")
     public ResponseEntity<List<TagResponseDTO>> getTagsByUserNotes (@PathVariable Long id_user) {
-        List<TagResponseDTO> tagResponseListDTO = noteService.getAllTagsByUserNotes(id_user);
 
-        if (tagResponseListDTO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(id_user);
+
+        if (userResponseDTO != null) {
+
+            List<TagResponseDTO> tagResponseListDTO = noteService.getAllTagsByUserNotes(id_user);
+
+            if (tagResponseListDTO.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(tagResponseListDTO);
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(tagResponseListDTO);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
@@ -89,12 +102,20 @@ public class NoteController {
 
     @GetMapping("/allNotesByUser/{id_user}")
     public ResponseEntity<List<NoteResponseDTO>> getAllNotesByUser(@PathVariable Long id_user) {
-        List<NoteResponseDTO> notesByUser = noteService.getAllNotesByUser(id_user);
 
-        if (notesByUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(id_user);
+
+        if (userResponseDTO != null) {
+
+            List<NoteResponseDTO> notesByUser = noteService.getAllNotesByUser(id_user);
+
+            if (notesByUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(notesByUser);
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(notesByUser);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
@@ -124,13 +145,20 @@ public class NoteController {
     @PutMapping("/update/{id_note}")
     public ResponseEntity<NoteResponseDTO> updateNote(@PathVariable Long id_note, @RequestBody UpdatedNoteRequestDTO updatedNoteRequestDTO) throws MyException {
 
-        NoteResponseDTO noteResponseDTO = noteService.updateNote(id_note, updatedNoteRequestDTO);
+        Note note = noteRepository.findById(id_note).orElse(null);
 
-        if (updatedNoteRequestDTO.getTitle() == null || updatedNoteRequestDTO.getDescription() == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        if (note != null) {
+
+            NoteResponseDTO noteResponseDTO = noteService.updateNote(id_note, updatedNoteRequestDTO);
+
+            if (updatedNoteRequestDTO.getTitle() == null || updatedNoteRequestDTO.getDescription() == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
     }
 
     @PutMapping("/disable/{id_note}")
@@ -186,11 +214,17 @@ public class NoteController {
     @DeleteMapping("/delete/{id_note}/{id_user}")
     public ResponseEntity<NoteResponseDTO> deleteNote(@PathVariable Long id_note, @PathVariable Long id_user) {
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
-        UserEntity user = userRepository.findById(id_user).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(id_user);
 
-        if (noteResponseDTO != null && user != null) {
-            noteService.deleteNote(id_note, id_user);
-            return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
+        if (noteResponseDTO != null && userResponseDTO != null) {
+
+            NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note, id_user);
+
+            if (deletedNoteResponseDTO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(noteResponseDTO);
+            }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
