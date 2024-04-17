@@ -17,10 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDate;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -43,7 +41,6 @@ public class AuthServiceTests {
 
     @InjectMocks
     private AuthServiceImpl authService;
-
 
     @Test
     void registerTest() throws MyException {
@@ -166,7 +163,4 @@ public class AuthServiceTests {
         assertThrows(InvalidPasswordException.class, () -> authService.validatePassword(requestDTO));
 
     }
-
-
-
 }
