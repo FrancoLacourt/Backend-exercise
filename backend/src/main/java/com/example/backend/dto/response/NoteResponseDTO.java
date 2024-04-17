@@ -2,7 +2,6 @@ package com.example.backend.dto.response;
 
 import com.example.backend.entity.Tag;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -13,5 +12,4 @@ public class NoteResponseDTO {
     private String description;
     private boolean enabled = true;
     private List<Tag> tags;
-
 }
