@@ -144,7 +144,7 @@ public class NoteServiceTest {
 
         user.setId(1L);
         user.setName("Franco");
-        user.setLastName("Lacourt");;
+        user.setLastName("Lacourt");
     }
 
     @Test
@@ -213,8 +213,6 @@ public class NoteServiceTest {
     void createNoteTest_WhenUserDoesNotExist() throws MyException {
 
         Long id_user = 1L;
-
-        UserEntity user = new UserEntity();
 
         NoteResponseDTO newNoteResponseDTO = new NoteResponseDTO();
         Note newNote = new Note();
@@ -313,6 +311,39 @@ public class NoteServiceTest {
 
         assertNull(noteResponseDTOListByUser);
         verifyNoInteractions(noteMapper);
+    }
+
+    @Test
+    void getAllTagsByUserNotesTest() {
+
+        note1.setTags(tags);
+        note2.setTags(tags);
+        user.setNotes(notes);
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
+        when(tagMapper.tagToTagResponseDTO(tag1)).thenReturn(tagResponseDTO1);
+        when(tagMapper.tagToTagResponseDTO(tag2)).thenReturn(tagResponseDTO2);
+
+        List<TagResponseDTO> tags = noteService.getAllTagsByUserNotes(id_user);
+
+        assertEquals(tags.size(), 2);
+        assertEquals(tags.get(0), tagResponseDTO1);
+        assertEquals(tags.get(1), tagResponseDTO2);
+
+        verify(userRepository).findById(id_user);
+        verify(tagMapper, times(2)).tagToTagResponseDTO(tag1);
+        verify(tagMapper, times(3)).tagToTagResponseDTO(tag2);
+    }
+
+    @Test
+    void getAllTagsByUserNotesTest_WhenUserDFoesNotExist() {
+
+        when(userRepository.findById(id_user)).thenReturn(Optional.empty());
+
+        List<TagResponseDTO> tags = noteService.getAllTagsByUserNotes(id_user);
+
+        assertNull(tags);
+        verifyNoInteractions(tagMapper);
     }
 
     @Test
@@ -486,6 +517,24 @@ public class NoteServiceTest {
     }
 
     @Test
+    void addTagToNoteTest_WhenTagIsAlreadyInNote() {
+
+        note1.setTags(tags);
+
+        when(noteRepository.findById(id_note1)).thenReturn(Optional.ofNullable(note1));
+        when(tagRepository.findById(id_tag1)).thenReturn(Optional.ofNullable(tag1));
+        when(noteMapper.noteToNoteResponseDTO(any(Note.class))).thenReturn(new NoteResponseDTO());
+
+        NoteResponseDTO noteResponseDTO = noteService.addTagToNote(id_note1, id_tag1);
+
+        verify(noteRepository).findById(id_note1);
+        verify(tagRepository).findById(id_tag1);
+        verifyNoMoreInteractions(noteRepository);
+        verifyNoMoreInteractions(tagRepository);
+        verify(noteMapper);
+    }
+
+    @Test
     void removeTagFromNoteTest() {
 
         Note newNote = new Note();
@@ -610,7 +659,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    void NoteTest() {
+    void deleteNoteTest() {
 
         when(noteRepository.findById(id_note1)).thenReturn(java.util.Optional.of(note1));
         when(userRepository.findById(id_user)).thenReturn(Optional.of(user));
@@ -638,6 +687,7 @@ public class NoteServiceTest {
         NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
 
         verify(noteRepository).findById(id_note1);
+        verify(userRepository).findById(id_user);
         verifyNoMoreInteractions(noteRepository);
         verifyNoInteractions(noteMapper);
 
@@ -652,7 +702,31 @@ public class NoteServiceTest {
 
         NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
 
+        verify(userRepository).findById(id_user);
         verify(noteRepository).findById(id_note1);
+        verifyNoMoreInteractions(noteRepository);
+        verifyNoInteractions(noteMapper);
+
+        assertNull(deletedNoteResponseDTO);
+    }
+
+    @Test
+    void deleteNoteTest_WhenUserDidNotCreatedTheNote() {
+
+        user.setNotes(notes);
+
+        Note newNote = new Note();
+        newNote.setId_note(5L);
+        newNote.setTitle("Valid Title");
+        newNote.setDescription("Valid description");
+
+        when(noteRepository.findById(id_note1)).thenReturn(Optional.of(newNote));
+        when(userRepository.findById(id_user)).thenReturn(Optional.ofNullable(user));
+
+        NoteResponseDTO deletedNoteResponseDTO = noteService.deleteNote(id_note1, id_user);
+
+        verify(noteRepository).findById(id_note1);
+        verify(userRepository).findById(id_user);
         verifyNoMoreInteractions(noteRepository);
         verifyNoInteractions(noteMapper);
 
