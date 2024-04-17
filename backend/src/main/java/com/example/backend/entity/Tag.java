@@ -15,7 +15,6 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_tag;
-
     private String tagName;
 
     @ManyToMany
@@ -33,6 +32,4 @@ public class Tag {
                 ", tagName='" + tagName + '\'' +
                 '}';
     }
-
-
 }
