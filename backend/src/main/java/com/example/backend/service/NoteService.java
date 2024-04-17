@@ -25,5 +25,4 @@ public interface NoteService {
     NoteResponseDTO disableNote(Long id_note);
     NoteResponseDTO enableNote(Long id_note);
     NoteResponseDTO deleteNote(Long id_note, Long id_user);
-
 }
