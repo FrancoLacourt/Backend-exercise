@@ -41,6 +41,7 @@ public class TagController {
 
     @GetMapping("/listOfTags")
     public ResponseEntity<List<TagResponseDTO>> getTags() {
+
         List<TagResponseDTO> tagResponseListDTO = tagService.getAllTags();
 
         if (tagResponseListDTO.isEmpty()) {
@@ -51,6 +52,7 @@ public class TagController {
 
     @GetMapping("/{id_tag}")
     public ResponseEntity<TagResponseDTO> findTagById(@PathVariable Long id_tag) {
+
         TagResponseDTO tagResponseDTO = tagService.findTagById(id_tag);
 
         if (tagResponseDTO != null) {
