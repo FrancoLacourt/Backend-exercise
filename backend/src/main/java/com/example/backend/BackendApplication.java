@@ -14,7 +14,6 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-
     @Bean
     public OpenAPI customOpenAPI(){
         return new OpenAPI()
@@ -26,5 +25,4 @@ public class BackendApplication {
                         .license(new License().name("Apache 2.0")
                                 .url("https://springdoc.org")));
     }
-
 }
