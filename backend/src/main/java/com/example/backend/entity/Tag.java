@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -28,9 +29,10 @@ public class Tag {
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + id_tag+
+                "id=" + id_tag +
                 ", tagName='" + tagName + '\'' +
                 '}';
     }
+
 
 }
