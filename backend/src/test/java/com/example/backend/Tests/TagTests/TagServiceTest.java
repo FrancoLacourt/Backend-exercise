@@ -17,12 +17,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +37,6 @@ public class TagServiceTest {
 
     @Mock
     private TagMapper tagMapper;
-
 
     @InjectMocks
     private TagServiceImpl tagService;
@@ -211,7 +208,6 @@ public class TagServiceTest {
         verify(tagRepository).findTagByTagName("Music");
         verify(tagRepository).findTagByTagName("Entertainment");
         verify(tagMapper).tagToTagResponseDTO(existingTag);
-//        verify(tagService).createTag("Entertainment");
 
         assertEquals(resultTagResponseListDTO.size(), 2);
         assertEquals(existingTagResponseDTO, resultTagResponseListDTO.get(0));
@@ -252,6 +248,7 @@ public class TagServiceTest {
 
     @Test
     void validateTagDTO_NullTagName() {
+
         TagRequestDTO tagDTO = new TagRequestDTO();
 
         MyException exception = assertThrows(MyException.class, () -> tagService.validate(tagDTO.getTagName()));
@@ -260,6 +257,7 @@ public class TagServiceTest {
 
     @Test
     void validateTagDTO_OnlySpaces() {
+
         TagRequestDTO tagDTO = new TagRequestDTO();
 
         tagDTO.setTagName("  ");
