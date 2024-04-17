@@ -15,11 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -42,7 +40,6 @@ public class UserServiceTest {
     @InjectMocks
     UserServiceImpl userService;
 
-
     private Long id_note1;
     private Long id_note2;
     private Long id_tag1;
@@ -63,7 +60,6 @@ public class UserServiceTest {
     private UserResponseDTO userResponseDTO2;
     private String userPassword = "franco123";
     private String user2password= "federico123";
-
 
     @BeforeEach
     void setUp() {
@@ -144,7 +140,6 @@ public class UserServiceTest {
         userResponseListDTO.add(userResponseDTO);
         userResponseListDTO.add(userResponseDTO2);
     }
-
 
     @Test
     void testConstructor() {
@@ -283,6 +278,5 @@ public class UserServiceTest {
 
         MyException exception = assertThrows(MyException.class, () -> userService.validatePassword(password));
         assertEquals("Password can't be null or empty.", exception.getMessage());
-
     }
 }
