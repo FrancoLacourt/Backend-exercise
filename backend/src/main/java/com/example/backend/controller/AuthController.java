@@ -21,13 +21,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody AuthRegisterRequestDTO request) throws MyException {
+
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthLoginRequestDTO request)
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthLoginRequestDTO request) {
 
-    {
         AuthResponseDTO authResponseDTO = authService.login(request);
 
         return ResponseEntity.ok()
