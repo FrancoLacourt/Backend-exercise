@@ -18,6 +18,4 @@ public class ConstantsService {
 
     @Value("${database.password}")
     private String databasePassword;
-
-
 }
