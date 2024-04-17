@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.time.LocalDate;
 
 @Service
@@ -31,8 +30,6 @@ public class AuthServiceImpl implements AuthService {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
-
-
 
     @Override
     public AuthResponseDTO register(AuthRegisterRequestDTO request) throws MyException{
@@ -76,8 +73,6 @@ public class AuthServiceImpl implements AuthService {
                 .registrationDate(registrationDate)
                 .build();
     }
-
-
 
     @Override
     public AuthResponseDTO login(AuthLoginRequestDTO request) {
