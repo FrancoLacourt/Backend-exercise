@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
@@ -30,7 +29,6 @@ public class JwtFilter extends OncePerRequestFilter  {
         this.jwtService = jwtService;
     }
 
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -40,7 +38,6 @@ public class JwtFilter extends OncePerRequestFilter  {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-
 
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
