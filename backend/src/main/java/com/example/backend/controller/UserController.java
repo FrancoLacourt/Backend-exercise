@@ -22,10 +22,9 @@ public class UserController {
         this.userService = userService;
     }
 
-
-
     @GetMapping("/listOfUsers")
     public ResponseEntity<List<UserResponseDTO>> getUsers() {
+
         List<UserResponseDTO> userResponseListDTO = userService.getAllUsers();
 
         if (userResponseListDTO.isEmpty()) {
@@ -37,6 +36,7 @@ public class UserController {
 
     @GetMapping("/{id_user}")
     public ResponseEntity<UserResponseDTO> findUserById(@PathVariable Long id_user) {
+
         UserResponseDTO userResponseDTO = userService.findUserById(id_user);
 
         if (userResponseDTO != null) {
@@ -48,6 +48,7 @@ public class UserController {
 
     @PutMapping("/changePassword/{id_user}")
     public ResponseEntity<UserResponseDTO> changePassword(@RequestParam String password, @PathVariable Long id_user) throws MyException {
+
         UserResponseDTO userResponseDTO = userService.changeUserPassword(id_user, password);
 
         if (password == null || ExceptionMethods.onlySpaces(password)) {
