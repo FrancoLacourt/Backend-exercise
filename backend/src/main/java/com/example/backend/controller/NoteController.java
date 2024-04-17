@@ -61,6 +61,7 @@ public class NoteController {
 
     @GetMapping("/listOfNotes")
     public ResponseEntity<List<NoteResponseDTO>> getNotes() {
+
         List<NoteResponseDTO> noteResponseListDTO = noteService.getEnabledNotes();
 
         if (noteResponseListDTO.isEmpty()) {
@@ -91,6 +92,7 @@ public class NoteController {
 
     @GetMapping("/listOfDisabledNotes")
     public ResponseEntity<List<NoteResponseDTO>> getDisabledNotes() {
+
         List<NoteResponseDTO> noteResponseListDTO = noteService.getDisabledNotes();
 
         if (noteResponseListDTO.isEmpty()) {
@@ -121,6 +123,7 @@ public class NoteController {
 
     @GetMapping("/allEnabledNotesByUser/{id_user}")
     public ResponseEntity<List<NoteResponseDTO>> getAllEnabledNotesByUser(@PathVariable Long id_user) {
+
         List<NoteResponseDTO> enabledNotesByUser = noteService.getAllEnabledNotesByUser(id_user);
 
         if (enabledNotesByUser.isEmpty()) {
@@ -163,6 +166,7 @@ public class NoteController {
 
     @PutMapping("/disable/{id_note}")
     public ResponseEntity<NoteResponseDTO> disableNote(@PathVariable Long id_note) {
+
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
         if (noteResponseDTO != null) {
@@ -175,6 +179,7 @@ public class NoteController {
 
     @PutMapping("/enable/{id_note}")
     public ResponseEntity<NoteResponseDTO> enableNote(@PathVariable Long id_note) {
+
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
         if (noteResponseDTO != null) {
@@ -187,6 +192,7 @@ public class NoteController {
 
     @PutMapping("/addTag/{id_note}")
     public ResponseEntity<NoteResponseDTO> addTagToNote(@PathVariable Long id_note, @RequestParam String tagName) throws MyException {
+
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
 
         if (noteResponseDTO != null) {
@@ -213,6 +219,7 @@ public class NoteController {
 
     @DeleteMapping("/delete/{id_note}/{id_user}")
     public ResponseEntity<NoteResponseDTO> deleteNote(@PathVariable Long id_note, @PathVariable Long id_user) {
+
         NoteResponseDTO noteResponseDTO = noteService.findNoteById(id_note);
         UserResponseDTO userResponseDTO = userService.findUserById(id_user);
 
