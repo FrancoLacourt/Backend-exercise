@@ -1,9 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.response.AuthResponseDTO;
 import com.example.backend.dto.response.UserResponseDTO;
 import com.example.backend.exception.MyException;
-
 import java.util.List;
 
 public interface UserService {
