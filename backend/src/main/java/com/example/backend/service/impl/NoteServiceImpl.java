@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -111,7 +112,7 @@ public class NoteServiceImpl implements NoteService {
         List<NoteResponseDTO> disabledNoteResponseDTOList = getAllNotes();
 
         return disabledNoteResponseDTOList.stream()
-                .filter(task -> !task.isEnabled())
+                .filter(Predicate.not(NoteResponseDTO::isEnabled)) // Filtrar las que no están activas
                 .collect(Collectors.toList());
     }
 
@@ -319,7 +320,7 @@ public class NoteServiceImpl implements NoteService {
                 note.getTags().clear();
 
                 if (user.getNotes() == null) {
-                    // Si es null, inicializar la lista
+                    // if null, initialize list
                     user.setNotes(new ArrayList<>());
                 }
 
