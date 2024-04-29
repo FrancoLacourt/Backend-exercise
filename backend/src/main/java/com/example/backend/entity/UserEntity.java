@@ -31,6 +31,7 @@ public class UserEntity implements UserDetails{
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate registrationDate;
+
     boolean isActive = true;
 
     @OneToMany
