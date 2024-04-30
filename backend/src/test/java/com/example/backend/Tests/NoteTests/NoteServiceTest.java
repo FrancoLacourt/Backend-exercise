@@ -529,7 +529,7 @@ public class NoteServiceTest {
         verify(tagRepository).findById(id_tag1);
         verifyNoMoreInteractions(noteRepository);
         verifyNoMoreInteractions(tagRepository);
-        verify(noteMapper);
+        verify(noteMapper).noteToNoteResponseDTO(any(Note.class));
     }
 
     @Test
