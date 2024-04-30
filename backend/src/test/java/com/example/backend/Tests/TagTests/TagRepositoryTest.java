@@ -7,34 +7,36 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
 public class TagRepositoryTest {
-    
+
     @Autowired
     TagRepository tagRepository;
-    
+
     private Tag tag1;
     private Tag tag2;
     private List<Tag> tags;
     private Note note1;
     private Note note2;
     private List<Note> notes;
-    
+
     @BeforeEach
     void setUp() {
-        
+
         tag1 = new Tag();
         tag2 = new Tag();
         note1 = new Note();
         note2 = new Note();
         notes = new ArrayList<>();
         tags = new ArrayList<>();
-        
+
         tag1.setTagName("Music");
         tag2.setTagName("Entertainment");
 
