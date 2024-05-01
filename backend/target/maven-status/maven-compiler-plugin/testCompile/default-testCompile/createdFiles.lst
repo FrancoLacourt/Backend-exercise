@@ -1,0 +1,10 @@
+com\example\backend\Tests\TagTests\TagServiceTest.class
+com\example\backend\Tests\TagTests\TagRepositoryTest.class
+com\example\backend\Tests\AuthTests\AuthServiceTests.class
+com\example\backend\Tests\NoteTests\NoteRepositoryTest.class
+com\example\backend\Tests\NoteTests\NoteServiceTest.class
+com\example\backend\Tests\UserTests\UserServiceTest.class
+com\example\backend\Tests\UserTests\UserMapperTest.class
+com\example\backend\Tests\NoteTests\NoteMapperTest.class
+com\example\backend\Tests\UserTests\UserRepositoryTest.class
+com\example\backend\Tests\TagTests\TagMapperTest.class
