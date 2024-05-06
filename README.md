@@ -13,7 +13,7 @@ which contains the necessary authentication and authorization information.
 - Postman, to test all endpoints.
 - Swagger, for documentation.
 
-This is not deployed, yet. So if you want to test it by yourself, you must create your own database and put the information on the file called "constants.properties", it is located on resources folder.
+This is not deployed, yet. So if you want to test it by yourself, you must create your own database and put the information as environmental variables.
 You should have something like the following:
 
 database.url=jdbc:mysql://localhost:YourPort/YourDataBaseName?allowPublicKeyRetrieval=true&useSSL=false&useTimezone=true&serverTimezone=GMT&characterEncoding=UTF-8
@@ -22,9 +22,6 @@ database.username=YourUsername
 
 database.password=YourPassword
 
-and don´t change JWT_SECRET constant, otherwise it won´t work.
 
 If you want to try the endpoints on Postman, you can use the documentation on Swagger, so you don't need to write it.
 Remember that you should have the project running in order to be able to try it.
-
-Right now, I'm working on the Frontend area of the project, to gain experience on that field. Once I finish with that, I pretend to add more things to the server side.
